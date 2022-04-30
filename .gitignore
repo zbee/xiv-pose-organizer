@@ -1,0 +1,5 @@
+./idea/*
+data/*
+web/assets/tmp/*
+*.xml
+*.iml

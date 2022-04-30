@@ -1,0 +1,209 @@
+body {
+    width: 100%;
+    min-height: 100%;
+    text-align: center;
+    background: #F5F5F5;
+    overflow-x: hidden;
+}
+
+a, a:active, a:hover, a:focus, a:visited {
+    color: #1E88E5;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.tip {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #E0E0E0;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    width: 250px;
+}
+
+#configure {
+    background: #E0E0E0;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    width: 450px;
+    margin: 100px auto auto;
+    color: #424242;
+    display: grid;
+    grid-template-columns: 10% 80% 10%;
+    align-items: center;
+}
+
+#configure div {
+    display: inline-block;
+}
+
+#configure .navigate {
+    font-size: 120px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+#work_through .navigate {
+    font-size: 120px;
+    font-weight: 900;
+    cursor: pointer;
+    position: absolute;
+    top: 40%;
+}
+
+#configure .navigate:first-of-type {
+    left: -40px;
+    position: relative;
+}
+
+#configure .navigate:last-of-type {
+    padding-left: 25px;
+}
+
+#work_through .navigate:first-of-type {
+    left: 0;
+}
+
+#work_through .navigate:last-of-type {
+    right: 0;
+}
+
+label {
+    cursor: pointer;
+    display: block;
+    margin-bottom: 7px;
+}
+
+#work_through {
+    margin: 20px 100px;
+    display: grid;
+    align-items: start;
+    justify-items: stretch;
+    grid-template-areas:
+        "progress progress progress progress"
+        "info data tags tags";
+    grid-template-columns: 5fr 4fr 7fr;
+    grid-template-rows: 1fr auto;
+    row-gap: 20px;
+    column-gap: 20px;
+    color: #424242;
+}
+
+#work_through select, #work_through select:focus,
+#work_through input[type='text'], #work_through input[type='text']:focus,
+#work_through input[type='number'], #work_through input[type='number']:focus {
+    border: 3px solid rgba(0, 0, 0, 0.2);
+    outline: none;
+    border-radius: 5px;
+    padding: 4px 10px;
+    box-sizing: border-box;
+}
+
+#work_through select {
+    width: 100%;
+}
+
+#work_through #progress {
+    grid-area: progress;
+}
+
+#work_through #info {
+    grid-area: info;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    justify-items: auto;
+    align-items: center;
+    row-gap: 20px;
+}
+
+#work_through #info span {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 4px 10px;
+    display: inline-block;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+#work_through #info sub {
+    font-size: 0;
+}
+
+#work_through #info #image {
+    grid-column: 1 / 3;
+    border-radius: 10px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    text-align: center;
+}
+
+#work_through #info #image img {
+    width: 100%;
+    height: auto;
+}
+
+#work_through #data {
+    grid-area: data;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    justify-items: auto;
+    align-items: center;
+    row-gap: 20px;
+    column-gap: 2px;
+}
+
+#work_through #data label {
+    margin-bottom: 0;
+}
+
+#work_through #tags {
+    grid-area: tags;
+}
+
+#work_through #tags .column_holder {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: auto;
+    align-items: start;
+    column-gap: 20px;
+}
+
+#work_through #tags .column_holder select {
+    height: 150px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+#work_through #tags .column_holder input {
+    width: 75%;
+}
+
+#work_through #tags .column_holder a {
+    width: 25%;
+    text-align: right;
+}
+
+#work_through #progress > div {
+    padding: 0;
+    background: rgba(0, 0, 0, 0.1);
+    overflow-x: hidden;
+}
+
+#work_through #progress #bar {
+    margin: 0;
+    padding: 4px 0 4px 10px;
+    text-align: center;
+    background: darkseagreen;
+    white-space: nowrap;
+}
+
+#work_through > div {
+    background: #E0E0E0;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: left;
+}
