@@ -114,7 +114,6 @@ function navigate(nav) {  // Process navigation data
       }
     );
 }
-
 body.on('keydown', '.navigate:focus', function (e) {
   if (e.keyCode == 13 || e.keyCode == 32) {
     navigate($(this));
@@ -127,9 +126,9 @@ body.on('click', 'input[name="pack"]', function () {
 });
 
 // Add items to <select> lists
-body.on('click', '.add_category', function () {
-  let select = $(this).parent().parent().find('select');
-  let value = $(this).parent().find('input').val();
+function add_category(cat) {
+  let select = cat.parent().parent().find('select');
+  let value = cat.parent().find('input').val();
   let text = value;
   let skip = false;
 
@@ -140,7 +139,7 @@ body.on('click', '.add_category', function () {
 
   // Make sure there are not duplicate entries
   select.find('option').each(function () {
-    if ($(this).val() === value || $(this).text() === text) {
+    if (cat.val() === value || cat.text() === text) {
       alert('Duplicate entry');
       skip = true;
     }
@@ -150,11 +149,20 @@ body.on('click', '.add_category', function () {
   if (value === '')
     skip = true;
 
-  if (!skip)
+  if (!skip) {
+    cat.parent().find('input').val('')
     select.append(
       '<option value="' + value + '">' + text + '</option>'
     );
+  }
+}
+
+body.on('keydown', '.add_category:focus', function (e) {
+  if (e.keyCode == 13 || e.keyCode == 32) {
+    add_category($(this));
+  }
 });
+
 
 // Keep others-required and others-posed in sync
 body.on('input', '#other_people_required', function () {
@@ -205,17 +213,23 @@ body.on('input', '#pack_names', function () {
 });
 
 // Add additional categories or tags column
-body.on('click', '.add_column', function () {
-  let column_type = $(this).data('type');
-  let index = $(this).data('index');
-  let tab = parseInt($(this).data('tab')) + parseInt(index) + 1;
-  $(this).parent().html(
+function add_column(col) {
+  let column_type = col.data('type');
+  let index = col.data('index');
+  let tab = parseInt(col.data('tab')) + parseInt(index) + 1;
+  col.parent().html(
     '<label for="' + column_type + index + '" style="display:none">' +
     'Choose ' + column_type + ' ' + index +
     '</label><select name="' + column_type + index + '" id="' + column_type + index +
     '" data-column="' + index + '" class="' + column_type + '" tabindex="' + tab + '" multiple></select>' +
     '<label><input type="text"/><a class="add_category">Add </a></label>'
   );
+}
+
+body.on('keydown', '.add_column:focus', function (e) {
+  if (e.keyCode == 13 || e.keyCode == 32) {
+    add_column($(this));
+  }
 });
 
 // Require fields

@@ -246,7 +246,8 @@ if (!$pose->pack)
           </select>
           <label>
             <input type="text" tabindex="<?= 200 + ($index + 1) * 10 ?>"/>
-            <a class="add_category" tabindex="<?= 201 + ($index + 1) * 10 ?>">
+            <a class="add_category" tabindex="<?= 201 + ($index + 1) * 10 ?>"
+               onclick="add_category($(this))">
               Add
             </a>
           </label>
@@ -256,7 +257,8 @@ if (!$pose->pack)
         <div>
           <label>
             <a class="add_column" data-index="<?= $i + 1 ?>"
-               data-type="categories" data-tab="170" tabindex="<?= 250 + $i ?>">
+               data-type="categories" data-tab="170" tabindex="<?= 250 + $i ?>"
+               onclick="add_column($(this))">
               <span style="font-weight:900">&plus;</span>
               Add Category Column
             </a>
@@ -287,7 +289,8 @@ if (!$pose->pack)
           </select>
           <label>
             <input type="text" tabindex="<?= 300 + ($index + 1) * 10 ?>"/>
-            <a class="add_category" tabindex="<?= 301 + ($index + 1) * 10 ?>">
+            <a class="add_category" tabindex="<?= 301 + ($index + 1) * 10 ?>"
+               onclick="add_category($(this))">
               Add
             </a>
           </label>
@@ -297,7 +300,7 @@ if (!$pose->pack)
         <div>
           <label>
             <a class="add_column" data-index="<?= $i + 1 ?>" data-type="tags"
-               tabindex="<?= 350 + $i ?>">
+               tabindex="<?= 350 + $i ?>" onclick="add_column($(this))">
               <span style="font-weight:900">&plus;</span>
               Add Tag Column
             </a>
@@ -321,7 +324,8 @@ if (!$pose->pack)
         </select>
         <label>
           <input type="text" tabindex="361"/>
-          <a class="add_category" tabindex="362">
+          <a class="add_category" tabindex="362"
+             onclick="add_category($(this))">
             Add
           </a>
         </label>
