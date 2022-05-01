@@ -195,6 +195,15 @@ if (!$pose->pack)
         </a>
       </label>
     </div>
+    <div class="pack-dependent"></div>
+    <div style="text-align:right;position:relative;top:-15px"
+         class="pack-dependent">
+      <a href="" target="_blank"
+         id="xivma_pack_search"
+         data-link="https://www.xivmodarchive.com/search?types=14%2C11%2C5%2C13%2C6&basic_text=">
+        Search on XIVModArchive
+      </a>
+    </div>
   </div>
 
   <div id="tags">
@@ -336,7 +345,8 @@ if (!$pose->pack)
 </div>
 
 <script>
-  update_search_link();
+  update_search_link('xivma_search', 'input[name="name"]');
+  update_search_link('xivma_pack_search', 'select[name="pack_names"]');
 
   if (typeof fileInput === 'undefined') {
     // Handle pasting of images

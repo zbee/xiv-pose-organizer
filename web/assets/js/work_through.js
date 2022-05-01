@@ -270,12 +270,19 @@ body.on('input', 'input, select', function () {
 
 // Update XIVMA search link
 body.on('input', 'input[name="name"]', function () {
-  update_search_link();
+  update_search_link('xivma_search', 'input[name="name"]');
+});
+body.on('input', 'select[name="pack_names"]', function () {
+  update_search_link('xivma_pack_search', 'select[name="pack_names"]');
 });
 
-function update_search_link() {
-  body.find('a[id="xivma_search"]').attr(
+function update_search_link(link, input) {
+  let value = body.find(input).val();
+  if (input.startsWith('select'))
+    value = body.find(input).find('option:selected').text();
+
+  body.find('a[id="' + link + '"]').attr(
     'href',
-    body.find('a[id="xivma_search"]').data('link') + body.find('input[name="name"]').val()
+    body.find('a[id="' + link + '"]').data('link') + value
   );
 }
