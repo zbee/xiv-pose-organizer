@@ -1,5 +1,7 @@
 // Navigate between poses - previous, next, skip to next
+let navigate_attempts = 1;
 body.on('click', '#work_through .navigate', function () {
+  // Process navigation data
   let data = {
     // Update settings
     _categories: [],
@@ -8,6 +10,39 @@ body.on('click', '#work_through .navigate', function () {
     categories: [],
     tags: [],
   };
+  let navigate_data = $(this).data();
+  data[navigate_data.current] = ''
+  data[navigate_data.target] = '';
+  data['resume'] = navigate_data.resume;
+  if (typeof navigate_data.skip != 'undefined')
+    data['skip'] = '';
+  let request_type = 'POST';
+  if (navigate_data.target != 'work_through')
+    request_type = 'GET';
+
+  // Don't allow navigation if the fields are empty, with triple click bypass
+  if (missing_require_fields() === true && navigate_attempts < 3) {
+    navigate_attempts++;
+    return;
+  }
+  else if (missing_require_fields() === true && navigate_attempts >= 3) {
+    navigate_attempts = 1;
+    $.ajax(
+      {
+        url: 'middleman.php',
+        type: request_type,
+        data: data,
+        async: false,
+      }
+    ).done(
+        function (response) {
+          load(navigate_data.target, navigate_data.resume);
+        }
+      );
+    return;
+  }
+
+  body.find('#loading').show();
 
   // Add all input fields to the data
   body.find('input[name]').each(function () {
@@ -63,19 +98,8 @@ body.on('click', '#work_through .navigate', function () {
     }
   });
 
-  // Process navigation data
-  let navigate_data = $(this).data();
-  data[navigate_data.current] = '';
-  data[navigate_data.target] = '';
-  data['resume'] = navigate_data.resume;
-  if (typeof navigate_data.skip != 'undefined')
-    data['skip'] = '';
-
   // Load the next page
   body.html('<img src="assets/img/loading.gif" alt="Loading...">');
-  let request_type = 'POST';
-  if (navigate_data.target != 'work_through')
-    request_type = 'GET';
   // Request the next page
   $.ajax(
     {
@@ -88,7 +112,6 @@ body.on('click', '#work_through .navigate', function () {
     // Draw the next page
     .done(
       function (response) {
-        console.log(response);
         load(navigate_data.target, navigate_data.resume);
       }
     );
@@ -145,6 +168,7 @@ body.on('change', '#other_people_posed', function () {
 
 // Enforce category selections when a pose pack is selected
 body.on('change', '#pack_names', function () {
+  body.find('#loading').show();
   $.ajax(
     {
       url: '/handle/work_through_pack_dependent_data.php',
@@ -154,6 +178,7 @@ body.on('change', '#pack_names', function () {
     }
   ).done(
     function (response) {
+      body.find('#loading').hide();
       if (response.length === 0)
         return;
       response = JSON.parse(response);
@@ -186,4 +211,60 @@ body.on('click', '.add_column', function () {
     '" data-column="' + index + '" class="' + column_type + '" multiple></select>' +
     '<label><input type="text"/><a class="add_category">Add </a></label>'
   );
+});
+
+// Require fields
+function missing_require_fields() {
+  let required = [
+    body.find('input[name="name"]'),
+    body.find('input[name="author"]'),
+    body.find('input[name="link"]'),
+    body.find('select[name="gender"]'),
+    body.find('select[name="race"]'),
+    body.find('select[name="categories0"]'),
+    body.find('select[name="categories1"]'),
+    body.find('select[name="categories2"]'),
+    body.find('select[name="tags0"]'),
+    body.find('select[name="tags1"]'),
+    body.find('select[name="tags2"]'),
+    body.find('select[name="verbs"]'),
+  ];
+  let required_pack = [
+    body.find('input[name="other_people_required"]'),
+    body.find('input[name="other_people_posed"]'),
+    body.find('select[name="submission_to_other"]'),
+    body.find('select[name="pack_names"]'),
+  ];
+  let fail = true;
+  let return_value = false;
+
+  let pack = body.find('input[id="pack_yes"]').prop('checked');
+
+  $.each(required, function (trash, selector) {
+    if (selector.length === 0)
+      return;
+    if (selector.val().length === 0) {
+      selector.addClass('error');
+      return_value = fail;
+    } else
+      selector.removeClass('error');
+  });
+
+  if (pack) {
+    $.each(required_pack, function (trash, selector) {
+      if (selector.val().length === 0) {
+        selector.addClass('error');
+        return_value = fail;
+      } else
+        selector.removeClass('error');
+    });
+  }
+
+  return return_value;
+}
+
+// Remove error class
+body.on('change', 'input, select', function () {
+  navigate_attempts = 1;
+  $(this).removeClass('error');
 });

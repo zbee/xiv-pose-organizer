@@ -27,11 +27,10 @@ if ($pose->has_preview) {
 if (!$pose->pack)
   echo '<style>.pack-dependent{display:none}</style>';
 
-//@TODO: require all fields (author, link?)
 //@TODO: cast input on settings and pose
-//@TODO: show loading from configure_review to a work_through screen
-//@TODO: show loading when pack name selected
 ?>
+
+<div style="display:none" id="loading"><img src="/assets/img/loading.gif"></div>
 
 <div id="work_through">
   <div id="progress">

@@ -15,8 +15,12 @@ $poser = new pose_organizer();
 </body>
 
 <script src="assets/js/jquery.js"></script>
+<script src="assets/js/configure.js"></script>
+<script src="assets/js/work_through.js"></script>
+<script src="assets/js/utilities.js"></script>
 <script type="application/javascript">
   function load(page = false, resume = 0) {
+    body.find('#loading').show();
     if (page === false) {
       page = '<?=steps[$poser->work_through_step]?>';
     }
@@ -50,13 +54,11 @@ $poser = new pose_organizer();
     ).done(
       function (html) {
         $('body').html(html);
+        body.find('#loading').hide();
       }
     );
   }
 
   load();
 </script>
-<script src="assets/js/configure.js"></script>
-<script src="assets/js/work_through.js"></script>
-<script src="assets/js/utilities.js"></script>
 </html>
