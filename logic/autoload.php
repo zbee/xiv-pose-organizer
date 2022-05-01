@@ -15,6 +15,7 @@ require 'core/folder_parser.inc';
 require 'core/maintain_tagging.inc';
 require 'core/navigator.inc';
 require 'core/save_pose.inc';
+require 'core/structure_swap.inc';
 require 'core/core.inc';
 
 // Load including code
