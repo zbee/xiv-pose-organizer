@@ -6,10 +6,29 @@ body {
     overflow-x: hidden;
 }
 
-a, a:active, a:hover, a:focus, a:visited {
+.focus:focus-within, :focus {
+    outline: none;
+}
+
+.focus:focus-within::before {
+    content: url('/assets/img/arrow.png');
+    position: relative;
+    top: 10px;
+}
+
+a, a:active, a:hover, a:visited {
     color: #1E88E5;
     text-decoration: underline;
     cursor: pointer;
+    outline: none;
+}
+
+a:focus, .navigate:focus, .focus-nav:focus-within {
+    outline: dashed;
+}
+
+.focus a:focus, .focus-nav:focus-within .navigate, .focus-nav:focus-within a {
+    outline: none;
 }
 
 .tip {

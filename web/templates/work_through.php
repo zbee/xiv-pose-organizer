@@ -44,12 +44,16 @@ if (!$pose->pack)
     <input name="key" value="<?= $pose->key ?>" type="hidden">
 
     <p>File Name</p>
-    <span onclick="copy_to_clipboard($(this))"><sub
-      ><?= $poser->poses_folder ?><?= $path ?>\</sub><?= $file ?></span>
+    <div class="focus">
+      <span onclick="copy_to_clipboard($(this))"><sub
+          tabindex="10"><?= $poser->poses_folder ?><?= $path ?>\</sub><?= $file ?></span>
+    </div>
 
     <p>Path to File</p>
-    <span onclick="copy_to_clipboard($(this))"
-    ><sub><?= $poser->poses_folder ?></sub><?= $path ?></span>
+    <div class="focus">
+      <span onclick="copy_to_clipboard($(this))"
+            tabindex="20"><sub><?= $poser->poses_folder ?></sub><?= $path ?></span>
+    </div>
 
     <?php if ($poser->want_pose_previews): ?>
       <div id="image">
@@ -88,12 +92,13 @@ if (!$pose->pack)
 
     <p>In a pack?</p>
     <div style="display: inline-block;max-width: 92%">
-      <label style="display: inline-block; margin-right: 5px">
+      <label style="display: inline-block; margin-right: 5px"
+             class="focus">
         <input type="radio" value="1" name="pack" id="pack_yes"
-          <?= $pose->pack ? 'checked' : '' ?>/>
+          <?= $pose->pack ? 'checked' : '' ?> tabindex="30"/>
         Yes
       </label>
-      <label style="display: inline-block; margin-left: 5px">
+      <label style="display: inline-block; margin-left: 5px" class="focus">
         <input type="radio" value="0" name="pack" id="pack_no"
           <?= $pose->pack ? '' : 'checked' ?>/>
         No
@@ -103,35 +108,43 @@ if (!$pose->pack)
 
   <div id="data">
     <label for="name">Pose Name</label>
-    <input type="text" name="name" id="name" value="<?= $pose->name ?>">
+    <div class="focus">
+      <input type="text" name="name" id="name" value="<?= $pose->name ?>"
+             tabindex="40">
+    </div>
     <div></div>
-    <div style="text-align:right;position:relative;top:-15px">
-      <a href="" target="_blank"
-         id="xivma_search"
+    <div style="text-align:right;position:relative;top:-15px" class="focus">
+      <a href="" target="_blank" tabindex="50" id="xivma_search"
          data-link="https://www.xivmodarchive.com/search?types=14%2C11%2C5%2C13%2C6&basic_text=">
         Search on XIVModArchive
       </a>
     </div>
     <?php if ($poser->want_pose_link): ?>
       <label for="link">Pose Link</label>
-      <input type="text" name="link" id="link" value="<?= $pose->link ?>">
+      <div class="focus">
+        <input type="text" name="link" id="link" value="<?= $pose->link ?>"
+               tabindex="60">
+      </div>
     <?php endif; ?>
     <label for="author">Pose Author</label>
-    <input type="text" name="author" id="author" value="<?= $pose->author ?>">
+    <div class="focus">
+      <input type="text" name="author" id="author" value="<?= $pose->author ?>"
+             tabindex="70">
+    </div>
 
     <div></div>
     <div></div>
 
     <label for="gender">Gender</label>
     <label for="race">Race</label>
-    <select multiple name="gender" id="gender">
+    <select multiple name="gender" id="gender" tabindex="80">
       <?php foreach (genders as $gender): ?>
         <option value="<?= (int)constant('gender_' . $gender) ?>"
           <?= $pose->gender == constant('gender_' . $gender) ? 'selected'
             : '' ?>><?= $gender ?></option>
       <?php endforeach; ?>
     </select>
-    <select multiple name="race" id="race">
+    <select multiple name="race" id="race" tabindex="90">
       <?php foreach (races as $race): ?>
         <option value="<?= $race ?>" <?= $pose->race == $race ? 'selected'
           : '' ?>><?= constant('race_' . $race)[0] ?></option>
@@ -151,24 +164,28 @@ if (!$pose->pack)
       <label for="other_people_required" class="pack-dependent">
         Others Required
       </label>
-      <input type="number" name="other_people_required"
-             id="other_people_required" class="pack-dependent"
-             value="<?= $pose->other_people_required ?>"
-             style="width:70%;padding:0 10px" min="1" max="15">
+      <div class="focus" style="white-space: nowrap;height: 30px">
+        <input type="number" name="other_people_required"
+               id="other_people_required" class="pack-dependent"
+               value="<?= $pose->other_people_required ?>"
+               style="width:70%;padding:0 10px" min="1" max="15" tabindex="100">
+      </div>
       <label for="other_people_posed" class="pack-dependent">
         Others Posed
       </label>
-      <input type="number" name="other_people_posed" id="other_people_posed"
-             value="<?= $pose->other_people_posed ?>"
-             style="width:70%;padding:0 10px" min="1" max="15"
-             class="pack-dependent">
+      <div class="focus" style="white-space: nowrap;height: 30px">
+        <input type="number" name="other_people_posed" id="other_people_posed"
+               value="<?= $pose->other_people_posed ?>"
+               style="width:70%;padding:0 10px" min="1" max="15"
+               class="pack-dependent" tabindex="110">
+      </div>
     </div>
 
     <label for="submission_to_other" class="pack-dependent">
       Role in group
     </label>
     <select multiple name="submission_to_other" id="submission_to_other"
-            style="height: 50px"
+            style="height: 50px" tabindex="120"
             class="pack-dependent">
       <option value="1" <?= $pose->submission_to_other ? 'selected' : '' ?>>
         Submissive in group pose
@@ -181,7 +198,7 @@ if (!$pose->pack)
 
     <label for="pack_names" class="pack-dependent">Pack Name</label>
     <div class="pack-dependent">
-      <select name="pack_names" id="pack_names" multiple>
+      <select name="pack_names" id="pack_names" tabindex="130" multiple>
         <?php foreach ($poser->get_packs() as $key => $pack): ?>
           <option value="<?= $key ?>"
             <?= $pose->pack_name == $key ? 'selected' : '' ?>
@@ -189,17 +206,16 @@ if (!$pose->pack)
         <?php endforeach; ?>
       </select>
       <label>
-        <input type="text"/>
-        <a class="add_category">
+        <input type="text" tabindex="140"/>
+        <a class="add_category" tabindex="150">
           Add
         </a>
       </label>
     </div>
     <div class="pack-dependent"></div>
     <div style="text-align:right;position:relative;top:-15px"
-         class="pack-dependent">
-      <a href="" target="_blank"
-         id="xivma_pack_search"
+         class="pack-dependent focus">
+      <a href="" target="_blank" id="xivma_pack_search" tabindex="160"
          data-link="https://www.xivmodarchive.com/search?types=14%2C11%2C5%2C13%2C6&basic_text=">
         Search on XIVModArchive
       </a>
@@ -219,7 +235,8 @@ if (!$pose->pack)
             Choose category <?= $index ?>
           </label>
           <select name="categories<?= $index ?>" id="categories<?= $index ?>"
-                  data-column="<?= $index ?>" class="categories" multiple>
+                  data-column="<?= $index ?>" class="categories"
+                  tabindex="<?= 170 + $index ?>" multiple>
             <?php foreach ($categories as $category): ?>
               <option value="<?= $category ?>"
                 <?= ($pose->categories != null and
@@ -228,8 +245,8 @@ if (!$pose->pack)
             <?php endforeach; ?>
           </select>
           <label>
-            <input type="text"/>
-            <a class="add_category">
+            <input type="text" tabindex="<?= 200 + ($index + 1) * 10 ?>"/>
+            <a class="add_category" tabindex="<?= 201 + ($index + 1) * 10 ?>">
               Add
             </a>
           </label>
@@ -239,7 +256,7 @@ if (!$pose->pack)
         <div>
           <label>
             <a class="add_column" data-index="<?= $i + 1 ?>"
-               data-type="categories">
+               data-type="categories" data-tab="170" tabindex="<?= 250 + $i ?>">
               <span style="font-weight:900">&plus;</span>
               Add Category Column
             </a>
@@ -259,6 +276,7 @@ if (!$pose->pack)
             Choose tags <?= $index ?>
           </label>
           <select name="tags<?= $index ?>" id="tags<?= $index ?>"
+                  tabindex="<?= 260 + $index ?>"
                   data-column="<?= $index ?>" class="tags" multiple>
             <?php foreach ($tags as $tag): ?>
               <option value="<?= $tag ?>"
@@ -268,8 +286,8 @@ if (!$pose->pack)
             <?php endforeach; ?>
           </select>
           <label>
-            <input type="text"/>
-            <a class="add_category">
+            <input type="text" tabindex="<?= 300 + ($index + 1) * 10 ?>"/>
+            <a class="add_category" tabindex="<?= 301 + ($index + 1) * 10 ?>">
               Add
             </a>
           </label>
@@ -278,7 +296,8 @@ if (!$pose->pack)
       <?php for ($i = $count; $i <= 2; $i++): ?>
         <div>
           <label>
-            <a class="add_column" data-index="<?= $i + 1 ?>" data-type="tags">
+            <a class="add_column" data-index="<?= $i + 1 ?>" data-type="tags"
+               tabindex="<?= 350 + $i ?>">
               <span style="font-weight:900">&plus;</span>
               Add Tag Column
             </a>
@@ -292,7 +311,7 @@ if (!$pose->pack)
         <label for="verbs" style="display:none">
           Choose verbs
         </label>
-        <select name="verbs" id="verbs" multiple>
+        <select name="verbs" id="verbs" tabindex="360" multiple>
           <?php foreach ($poser->verbs as $verb): ?>
             <option value="<?= $verb ?>"
               <?= ($pose->verb != null and $verb == $pose->verb) ? 'selected'
@@ -301,14 +320,14 @@ if (!$pose->pack)
           <?php endforeach; ?>
         </select>
         <label>
-          <input type="text"/>
-          <a class="add_category">
+          <input type="text" tabindex="361"/>
+          <a class="add_category" tabindex="362">
             Add
           </a>
         </label>
       </div>
-      <div>
-        <a href="?find_incomplete"
+      <div class="focus-nav">
+        <a href="?find_incomplete" tabindex="363"
            style="color:#424242;text-decoration:none;text-align: center">
           <div class="navigate" style="position:static;font-size:80px">
             &#9858;
@@ -316,11 +335,11 @@ if (!$pose->pack)
           <h1 style="margin-top:0">1st Unedited</h1>
         </a>
       </div>
-      <div style="text-align: center">
+      <div style="text-align: center" class="focus-nav">
         <div class="navigate" style="position:static;font-size:80px"
              data-current="work_through" data-target="work_through"
              data-resume="<?= $poser->work_through_pose_step + 1 ?>"
-             data-skip="">
+             data-skip="" tabindex="364" onclick="navigate($(this))">
           &#10174;
         </div>
         <h1 style="margin-top:0">Skip</h1>
@@ -330,16 +349,17 @@ if (!$pose->pack)
 
   <nav class="navigate" data-current="work_through"
        data-target="<?= $poser->work_through_pose_step < 1 ? 'configure_review'
-         : 'work_through' ?>"
+         : 'work_through' ?>" tabindex="1" onclick="navigate($(this))"
        data-resume="<?= $poser->work_through_pose_step < 1 ? ''
          : $poser->work_through_pose_step - 1 ?>">
     &laquo;
   </nav>
   <nav class="navigate" data-current="work_through"
        data-target="<?= $poser->work_through_pose_step == $poser->pose_count()
-         ? 'review' : 'work_through' ?>"
+         ? 'review' : 'work_through' ?>" tabindex="365"
        data-resume="<?= $poser->work_through_pose_step == $poser->pose_count()
-         ? 'last' : $poser->work_through_pose_step + 1 ?>">
+         ? 'last' : $poser->work_through_pose_step + 1 ?>"
+       onclick="navigate($(this))">
     &raquo;
   </nav>
 </div>

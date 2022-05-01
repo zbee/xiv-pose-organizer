@@ -1,7 +1,6 @@
 // Navigate between poses - previous, next, skip to next
 let navigate_attempts = 1;
-body.on('click', '#work_through .navigate', function () {
-  // Process navigation data
+function navigate(nav) {  // Process navigation data
   let data = {
     // Update settings
     _categories: [],
@@ -10,7 +9,7 @@ body.on('click', '#work_through .navigate', function () {
     categories: [],
     tags: [],
   };
-  let navigate_data = $(this).data();
+  let navigate_data = nav.data();
   data[navigate_data.current] = ''
   data[navigate_data.target] = '';
   data['resume'] = navigate_data.resume;
@@ -45,11 +44,11 @@ body.on('click', '#work_through .navigate', function () {
 
   // Add all input fields to the data
   body.find('input[name]').each(function () {
-    let name = $(this).attr('name');
-    let value = $(this).val();
+    var name = nav.attr('name');
+    var value = nav.val();
 
     if (name == 'pack')
-      value = $(this).parent().parent().find('input:checked').val()
+      value = nav.parent().parent().find('input:checked').val()
 
     if (name == 'has_preview')
       value = value !== '0';
@@ -60,35 +59,35 @@ body.on('click', '#work_through .navigate', function () {
 
   // Add all selected option fields to the data
   body.find('select').each(function () {
-    let name = $(this).attr('name');
-    let value = $(this).find('option:selected').attr('value');
+    name = nav.attr('name');
+    value = nav.find('option:selected').attr('value');
     if (typeof value === 'undefined')
       value = null;
 
     // Handle categories and tags separately
     if (name.startsWith('categories') || name.startsWith('tags')) {
       // The pose's tag/category
-      data[$(this).attr('class')][name.charAt(name.length - 1)] = value;
+      data[nav.attr('class')][name.charAt(name.length - 1)] = value;
 
       // Updating all of the categories/tags available
-      $(this).find('option').each(function () {
+      nav.find('option').each(function () {
         // Establish the array
         if (typeof data['_' + name.slice(0, -1)][name.charAt(name.length - 1)] == 'undefined')
           data['_' + name.slice(0, -1)][name.charAt(name.length - 1)] = [];
 
-        data['_' + name.slice(0, -1)][name.charAt(name.length - 1)].push($(this).val());
+        data['_' + name.slice(0, -1)][name.charAt(name.length - 1)].push(nav.val());
       });
     } else if (name.startsWith('verb')) {
       data[name.slice(0, -1)] = value;
       data[name] = [];
-      $(this).find('option').each(function () {
-        data[name].push($(this).val());
+      nav.find('option').each(function () {
+        data[name].push(nav.val());
       });
     } else if (name.startsWith('pack_name')) {
       data[name.slice(0, -1)] = value;
       data[name] = {};
-      $(this).find('option').each(function () {
-        data[name][$(this).val()] = $(this).text();
+      nav.find('option').each(function () {
+        data[name][nav.val()] = nav.text();
       });
     } else {
       if (name === 'submission-to-other')
@@ -114,6 +113,12 @@ body.on('click', '#work_through .navigate', function () {
         load(navigate_data.target, navigate_data.resume);
       }
     );
+}
+
+body.on('keydown', '.navigate:focus', function (e) {
+  if (e.keyCode == 13 || e.keyCode == 32) {
+    navigate($(this));
+  }
 });
 
 // Hide pack-based controls if it's not a pack
@@ -203,11 +208,12 @@ body.on('input', '#pack_names', function () {
 body.on('click', '.add_column', function () {
   let column_type = $(this).data('type');
   let index = $(this).data('index');
+  let tab = parseInt($(this).data('tab')) + parseInt(index) + 1;
   $(this).parent().html(
     '<label for="' + column_type + index + '" style="display:none">' +
     'Choose ' + column_type + ' ' + index +
     '</label><select name="' + column_type + index + '" id="' + column_type + index +
-    '" data-column="' + index + '" class="' + column_type + '" multiple></select>' +
+    '" data-column="' + index + '" class="' + column_type + '" tabindex="' + tab + '" multiple></select>' +
     '<label><input type="text"/><a class="add_category">Add </a></label>'
   );
 });
