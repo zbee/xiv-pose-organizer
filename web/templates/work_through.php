@@ -26,8 +26,6 @@ if ($pose->has_preview) {
 // Hide pack-dependent elements
 if (!$pose->pack)
   echo '<style>.pack-dependent{display:none}</style>';
-
-//@TODO: cast input on settings and pose
 ?>
 
 <div style="display:none" id="loading"><img src="/assets/img/loading.gif"></div>
