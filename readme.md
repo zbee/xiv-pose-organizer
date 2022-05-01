@@ -1,12 +1,18 @@
 # xiv-pose-organizer
 
-![Preview of the Work Through process of the software](preview.png)
-
-Windows 10, PHP 8.1, with compatibility for .pose and
+> Windows 10, PHP 8.1, with compatibility for .pose and
 .cmp files.
 
 A tool to help you go through and organize all of
 your FFXIV poses and make them searchable.
+
+## Software Preview
+![Preview of the Work Through process of the software](preview.png)
+## Output Preview
+![Preview of the output of the work through process](output_preview.png)
+
+(there are 2 output modes: flat ant folders - folders for cleaner storage and more structured searching, flat for simpler searching)
+
 
 # What is this
 
