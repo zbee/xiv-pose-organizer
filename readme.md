@@ -11,7 +11,7 @@ your FFXIV poses and make them searchable.
 ## Output Preview
 ![Preview of the output of the work through process](output_preview.png)
 
-(there are 2 output modes: flat ant folders - folders for cleaner storage and more structured searching, flat for simpler searching)
+(there are 2 output modes: flat and folders - folders for cleaner storage and more structured searching, flat for simpler searching)
 
 
 # What is this
