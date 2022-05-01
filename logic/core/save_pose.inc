@@ -156,7 +156,7 @@ class save_pose extends navigator {
       $pose->other_people_posed > 0 and
       !$this->use_nested_structure_for_poses
     )
-      $sub .= 'g(' . $pose->other_people_posed+1 . ')';
+      $sub .= 'g(' . $pose->other_people_posed+1 . ') ';
     // Sub/Dom, regardless
     $pose->submission_to_other == true ?
       $sub .= 'sub' :
