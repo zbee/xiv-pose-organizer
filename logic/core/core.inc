@@ -1,9 +1,9 @@
 <?php
 
-class pose_organizer extends save_pose {
-  public int $work_through_step = step_configure;
-  public int $work_through_pose_step = 0;
-  public string $dots = '../';
+class pose_organizer extends structure_swap {
+  public int    $work_through_step      = step_configure;
+  public int    $work_through_pose_step = 0;
+  public string $dots                   = '../';
 
   public function __construct($dots = '../') {
     $this->dots = $dots;
