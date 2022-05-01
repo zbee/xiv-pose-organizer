@@ -24,8 +24,7 @@ body.on('click', '#work_through .navigate', function () {
   if (missing_require_fields() === true && navigate_attempts < 3) {
     navigate_attempts++;
     return;
-  }
-  else if (missing_require_fields() === true && navigate_attempts >= 3) {
+  } else if (missing_require_fields() === true && navigate_attempts >= 3) {
     navigate_attempts = 1;
     $.ajax(
       {
@@ -35,10 +34,10 @@ body.on('click', '#work_through .navigate', function () {
         async: false,
       }
     ).done(
-        function (response) {
-          load(navigate_data.target, navigate_data.resume);
-        }
-      );
+      function (response) {
+        load(navigate_data.target, navigate_data.resume);
+      }
+    );
     return;
   }
 
@@ -153,13 +152,13 @@ body.on('click', '.add_category', function () {
 });
 
 // Keep others-required and others-posed in sync
-body.on('change', '#other_people_required', function () {
+body.on('input', '#other_people_required', function () {
   let posed = $(this).parent().find('input[name="other_people_posed"]')
   posed.attr('min', $(this).val());
   if (posed.val() < $(this).val())
     posed.val($(this).val());
 })
-body.on('change', '#other_people_posed', function () {
+body.on('input', '#other_people_posed', function () {
   let posed = $(this).parent().find('input[name="other_people_required"]')
   posed.attr('max', $(this).val());
   if (posed.val() > $(this).val())
@@ -167,7 +166,7 @@ body.on('change', '#other_people_posed', function () {
 })
 
 // Enforce category selections when a pose pack is selected
-body.on('change', '#pack_names', function () {
+body.on('input', '#pack_names', function () {
   body.find('#loading').show();
   $.ajax(
     {
@@ -264,7 +263,19 @@ function missing_require_fields() {
 }
 
 // Remove error class
-body.on('change', 'input, select', function () {
+body.on('input', 'input, select', function () {
   navigate_attempts = 1;
   $(this).removeClass('error');
 });
+
+// Update XIVMA search link
+body.on('input', 'input[name="name"]', function () {
+  update_search_link();
+});
+
+function update_search_link() {
+  body.find('a[id="xivma_search"]').attr(
+    'href',
+    body.find('a[id="xivma_search"]').data('link') + body.find('input[name="name"]').val()
+  );
+}

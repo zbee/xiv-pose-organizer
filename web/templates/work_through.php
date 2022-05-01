@@ -51,21 +51,21 @@ if (!$pose->pack)
     <span onclick="copy_to_clipboard($(this))"
     ><sub><?= $poser->poses_folder ?></sub><?= $path ?></span>
 
-    <div id="image">
-      <?= $pose->has_preview
-        ? "<img src='$image' alt='Pose preview image'>
+    <?php if ($poser->want_pose_previews): ?>
+      <div id="image">
+        <?= $pose->has_preview ? "<img src='$image' alt='Pose preview image'>
             <input name='has_preview' value='1' type='hidden'>
-            <input name='image_name' value='$pose->image_name' type='hidden'>"
-        : '<div style="border: rgba(0, 0, 0, 0.1) solid 4px;padding:10px;
+            <input name='image_name' value='$pose->image_name' type='hidden'>" : '<div style="border: rgba(0, 0, 0, 0.1) solid 4px;padding:10px;
             border-radius:10px">
              
           <h2>Ctrl+V</h2> to paste preview image (<code>WIN+Shift+S</code>)
           </div>
           <input name="has_preview" value="0" type="hidden">' ?>
-    </div>
-    <form id="upload_preview_image" style="display:none">
-      <input name="file" type="file" id="preview_image_input"/>
-    </form>
+      </div>
+      <form id="upload_preview_image" style="display:none">
+        <input name="file" type="file" id="preview_image_input"/>
+      </form>
+    <?php endif ?>
 
     <?php if (
       $poser->normalize_poses and
@@ -104,6 +104,14 @@ if (!$pose->pack)
   <div id="data">
     <label for="name">Pose Name</label>
     <input type="text" name="name" id="name" value="<?= $pose->name ?>">
+    <div></div>
+    <div style="text-align:right;position:relative;top:-15px">
+      <a href="" target="_blank"
+         id="xivma_search"
+         data-link="https://www.xivmodarchive.com/search?types=14%2C11%2C5%2C13%2C6&basic_text=">
+        Search on XIVModArchive
+      </a>
+    </div>
     <?php if ($poser->want_pose_link): ?>
       <label for="link">Pose Link</label>
       <input type="text" name="link" id="link" value="<?= $pose->link ?>">
@@ -221,7 +229,8 @@ if (!$pose->pack)
       <?php for ($i = $count; $i <= 2; $i++): ?>
         <div>
           <label>
-            <a class="add_column" data-index="<?=$i+1?>" data-type="categories">
+            <a class="add_column" data-index="<?= $i + 1 ?>"
+               data-type="categories">
               <span style="font-weight:900">&plus;</span>
               Add Category Column
             </a>
@@ -260,7 +269,7 @@ if (!$pose->pack)
       <?php for ($i = $count; $i <= 2; $i++): ?>
         <div>
           <label>
-            <a class="add_column" data-index="<?=$i+1?>" data-type="tags">
+            <a class="add_column" data-index="<?= $i + 1 ?>" data-type="tags">
               <span style="font-weight:900">&plus;</span>
               Add Tag Column
             </a>
@@ -327,6 +336,8 @@ if (!$pose->pack)
 </div>
 
 <script>
+  update_search_link();
+
   if (typeof fileInput === 'undefined') {
     // Handle pasting of images
     var form = document.getElementById("upload_preview_image");
