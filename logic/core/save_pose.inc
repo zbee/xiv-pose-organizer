@@ -157,13 +157,13 @@ class save_pose extends navigator {
       !$this->use_nested_structure_for_poses
     )
       $sub .= 'g(' . $pose->other_people_posed+1 . ') ';
-    // Sub/Dom, regardless
-    $pose->submission_to_other == true ?
-      $sub .= 'sub' :
-      $sub .= 'dom';
     // Sub/Dom people required
-    if ($pose->other_people_required > 0)
+    if ($pose->other_people_required > 0) {
+      $pose->submission_to_other == true ?
+        $sub .= 'sub' :
+        $sub .= 'dom';
       $sub .= '(' . $pose->other_people_required . ')';
+    }
 
     // Fill in file name from format
     $file_name      = str_replace('%categories%', $categories_text, $file_name);
