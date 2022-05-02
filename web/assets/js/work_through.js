@@ -217,12 +217,13 @@ function add_column(col) {
   let column_type = col.data('type');
   let index = col.data('index');
   let tab = parseInt(col.data('tab')) + parseInt(index);
+  let tab_long = 30 + parseInt(col.data('tab')) + parseInt(index) * 10;
   col.parent().html(
     '<label for="' + column_type + index + '" style="display:none">' +
     'Choose ' + column_type + ' ' + index +
     '</label><select name="' + column_type + index + '" id="' + column_type + index +
     '" data-column="' + index + '" class="' + column_type + '" tabindex="' + tab + '" multiple></select>' +
-    '<label><input type="text" tabindex="' + (tab + 30) + '"/><a class="add_category" tabindex="' + (tab + 31) + '">Add </a></label>'
+    '<label><input type="text" tabindex="' + tab_long + '"/><a class="add_category" tabindex="' + (tab_long + 1) + '">Add </a></label>'
   );
 }
 body.on('keydown', '.add_column:focus', function (e) {

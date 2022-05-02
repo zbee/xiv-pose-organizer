@@ -289,8 +289,8 @@ if (!$pose->pack)
             <?php endforeach; ?>
           </select>
           <label>
-            <input type="text" tabindex="<?= 300 + ($index + 1) * 10 ?>"/>
-            <a class="add_category" tabindex="<?= 301 + ($index + 1) * 10 ?>"
+            <input type="text" tabindex="<?= 290 + ($index + 1) * 10 ?>"/>
+            <a class="add_category" tabindex="<?= 291 + ($index + 1) * 10 ?>"
                onclick="add_category($(this))">
               Add
             </a>
@@ -301,7 +301,8 @@ if (!$pose->pack)
         <div>
           <label>
             <a class="add_column" data-index="<?= $i + 1 ?>" data-type="tags"
-               tabindex="<?= 350 + $i ?>" onclick="add_column($(this))">
+               tabindex="<?= 350 + $i ?>" onclick="add_column($(this))"
+               data-tab="260">
               <span style="font-weight:900">&plus;</span>
               Add Tag Column
             </a>
