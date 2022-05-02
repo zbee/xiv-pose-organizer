@@ -45,8 +45,9 @@ if (!$pose->pack)
 
     <p>File Name</p>
     <div class="focus">
-      <span onclick="copy_to_clipboard($(this))"><sub
-          tabindex="10"><?= $poser->poses_folder ?><?= $path ?>\</sub><?= $file ?></span>
+      <span onclick="copy_to_clipboard($(this))"
+            tabindex="10"><sub
+        ><?= $poser->poses_folder ?><?= $path ?>\</sub><?= $file ?></span>
     </div>
 
     <p>Path to File</p>

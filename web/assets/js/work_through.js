@@ -216,16 +216,15 @@ body.on('input', '#pack_names', function () {
 function add_column(col) {
   let column_type = col.data('type');
   let index = col.data('index');
-  let tab = parseInt(col.data('tab')) + parseInt(index) + 1;
+  let tab = parseInt(col.data('tab')) + parseInt(index);
   col.parent().html(
     '<label for="' + column_type + index + '" style="display:none">' +
     'Choose ' + column_type + ' ' + index +
     '</label><select name="' + column_type + index + '" id="' + column_type + index +
     '" data-column="' + index + '" class="' + column_type + '" tabindex="' + tab + '" multiple></select>' +
-    '<label><input type="text"/><a class="add_category">Add </a></label>'
+    '<label><input type="text" tabindex="' + (tab + 30) + '"/><a class="add_category" tabindex="' + (tab + 31) + '">Add </a></label>'
   );
 }
-
 body.on('keydown', '.add_column:focus', function (e) {
   if (e.keyCode == 13 || e.keyCode == 32) {
     add_column($(this));
@@ -306,3 +305,10 @@ function update_search_link(link, input) {
     body.find('a[id="' + link + '"]').data('link') + value
   );
 }
+
+// Keybinding the path span copy to clipboard
+body.on('keydown', 'span:focus', function (e) {
+  if (e.keyCode == 13 || e.keyCode == 32) {
+    copy_to_clipboard($(this));
+  }
+});
