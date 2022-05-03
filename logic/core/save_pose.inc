@@ -69,7 +69,7 @@ class save_pose extends navigator {
     // Others posed
     $group = '';
     if ($pose->other_people_posed > 0)
-      $group = 'g(' . $pose->other_people_posed+1 . ')';
+      $group = 'g(' . $pose->other_people_posed + 1 . ')';
 
     // Fill in folder name from format
     $folder = $this->folder_name_format;
@@ -150,13 +150,12 @@ class save_pose extends navigator {
       $gender = 'male';
 
     // Others posed
-    $sub   = '';
+    $sub = '';
     // Group, if structure is flat
     if (
-      $pose->other_people_posed > 0 and
-      !$this->use_nested_structure_for_poses
+      $pose->other_people_posed > 0 and !$this->use_nested_structure_for_poses
     )
-      $sub .= 'g(' . $pose->other_people_posed+1 . ') ';
+      $sub .= 'g(' . $pose->other_people_posed + 1 . ') ';
     // Sub/Dom people required
     if ($pose->other_people_required > 0) {
       $pose->submission_to_other == true ?
@@ -203,8 +202,9 @@ class save_pose extends navigator {
       if ($this->want_pose_previews and $pose->has_preview) {
         // Support pose previews and uploaded previews
         $image = '\\' . $pose->image_name;
-        if (str_contains($image, '\\assets\\tmp\\'))
-          $image = str_replace('\\..', '..\\web', $image);
+        if (str_contains($image, 'assets\\tmp\\'))
+          $image =
+            str_replace('\\assets\\tmp\\', '..\\web\\assets\\tmp\\', $image);
         else
           $image = $this->poses_folder . '\\' . $image;
 
@@ -284,6 +284,11 @@ class save_pose extends navigator {
       $post_data['other_people_required'] = 0;
       $post_data['submission_to_other']   = null;
     }
+    else {
+      $post_data['submission_to_other'] =
+        $post_data['submission_to_other'] == '' ? null
+          : $post_data['submission_to_other'] == '1';
+    }
 
     // Find the pose
     $pose = $this->find_pose($post_data['key']);
@@ -302,7 +307,5 @@ class save_pose extends navigator {
     $pose->skip();
     $this->save_poses();
   }
-
-  //link to pose website https://stackoverflow.com/q/6253888/1843510
 
 }

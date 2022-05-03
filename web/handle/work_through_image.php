@@ -16,6 +16,7 @@ if (in_array($ext, $valid_extensions)) {
   $path = $path . strtolower($final_image);
   $time = time();
   $move = move_uploaded_file($tmp, $path);
+  $path = str_replace('..\\', '', $path);
   if ($move) {
     echo "<img src='$path?$time' alt='Pose preview image' />
           <input name='has_preview' value='1' type='hidden'>

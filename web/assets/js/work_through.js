@@ -195,6 +195,8 @@ body.on('input', '#pack_names', function () {
         return;
       response = JSON.parse(response);
 
+      body.find('div[id="image"]').html(response.image);
+
       body.find('input[name="link"]').val(response.link).prop('disabled', true);
       body.find('input[name="author"]').val(response.author).prop('disabled', true);
       body.find('input[name="other_people_posed"]').val(response.others_posed).prop('disabled', true);

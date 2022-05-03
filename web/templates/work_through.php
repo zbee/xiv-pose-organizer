@@ -17,7 +17,7 @@ $image = '';
 if ($pose->has_preview) {
   $extension = explode('.', $pose->image_name);
   $extension = $extension[count($extension) - 1];
-  $image     = "assets/tmp/$poser->work_through_pose_step.$extension";
+  $image     = "assets\\tmp\\$poser->work_through_pose_step.$extension";
 
   if (!str_contains($pose->image_name, 'tmp'))
     copy($poser->poses_folder . $pose->image_name, $image);
@@ -60,7 +60,7 @@ if (!$pose->pack)
       <div id="image">
         <?= $pose->has_preview ? "<img src='$image' alt='Pose preview image'>
             <input name='has_preview' value='1' type='hidden'>
-            <input name='image_name' value='$pose->image_name' type='hidden'>" : '<div style="border: rgba(0, 0, 0, 0.1) solid 4px;padding:10px;
+            <input name='image_name' value='$image' type='hidden'>" : '<div style="border: rgba(0, 0, 0, 0.1) solid 4px;padding:10px;
             border-radius:10px">
              
           <h2>Ctrl+V</h2> to paste preview image (<code>WIN+Shift+S</code>)
