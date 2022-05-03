@@ -101,7 +101,7 @@ if (!$pose->pack)
       </label>
       <label style="display: inline-block; margin-left: 5px" class="focus">
         <input type="radio" value="0" name="pack" id="pack_no"
-          <?= $pose->pack ? '' : 'checked' ?>/>
+          <?= $pose->pack ? '' : 'checked' ?> tabindex="35"/>
         No
       </label>
     </div>
@@ -165,7 +165,7 @@ if (!$pose->pack)
       <label for="other_people_required" class="pack-dependent">
         Others Required
       </label>
-      <div class="focus" style="white-space: nowrap;height: 30px">
+      <div style="white-space: nowrap;height: 30px">
         <input type="number" name="other_people_required"
                id="other_people_required" class="pack-dependent"
                value="<?= $pose->other_people_required ?>"
@@ -174,7 +174,7 @@ if (!$pose->pack)
       <label for="other_people_posed" class="pack-dependent">
         Others Posed
       </label>
-      <div class="focus" style="white-space: nowrap;height: 30px">
+      <div style="white-space: nowrap;height: 30px">
         <input type="number" name="other_people_posed" id="other_people_posed"
                value="<?= $pose->other_people_posed ?>"
                style="width:70%;padding:0 10px" min="1" max="15"
@@ -186,9 +186,14 @@ if (!$pose->pack)
       Role in group
     </label>
     <select multiple name="submission_to_other" id="submission_to_other"
-            style="height: 50px" tabindex="120"
+            style="height: 75px" tabindex="120"
             class="pack-dependent">
-      <option value="1" <?= $pose->submission_to_other ? 'selected' : '' ?>>
+      <option value=""
+        <?= $pose->submission_to_other === null ? 'selected' : '' ?>>
+        Equal
+      </option>
+      <option value="1"
+        <?= $pose->submission_to_other === true ? 'selected' : '' ?>>
         Submissive in group pose
       </option>
       <option value="0"

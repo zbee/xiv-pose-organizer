@@ -91,7 +91,7 @@ function navigate(nav) {  // Process navigation data
       });
     } else {
       if (name === 'submission-to-other')
-        value = value !== '0';
+        value = value === '' ? null : value !== '0';
       data[name] = value;
     }
   });
@@ -191,8 +191,20 @@ body.on('input', '#pack_names', function () {
   ).done(
     function (response) {
       body.find('#loading').hide();
-      if (response.length === 0)
+
+      // Clear disables when nothing is returned
+      if (response.length === 0) {
+        // if there were disabled fields, clear them
+        body.find('*[disabled]').each(function () {
+          $(this).val('');
+          $(this).find('option').each(function () {
+            $(this).removeAttr('selected');
+          });
+        });
+
+        body.find('*[disabled]').removeAttr('disabled');
         return;
+      }
       response = JSON.parse(response);
 
       body.find('div[id="image"]').html(response.image);
