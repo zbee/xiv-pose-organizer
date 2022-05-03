@@ -191,7 +191,8 @@ if (!$pose->pack)
             style="height: 75px" tabindex="120"
             class="pack-dependent">
       <option value=""
-        <?= $pose->submission_to_other === null ? 'selected' : '' ?>>
+        <?= $pose->submission_to_other === null && $pose->worked_through
+          ? 'selected' : '' ?>>
         Equal
       </option>
       <option value="1"
