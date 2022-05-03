@@ -1,5 +1,4 @@
 Realistically
-* Autocomplete author names
 * Cast inputs to `new pose()`
 * Function to swap folder structures mid work_through
 * After all poses are worked through, there should be a review stage
