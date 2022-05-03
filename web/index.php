@@ -28,14 +28,7 @@ $poser = new pose_organizer();
     data[page] = '';
 
     <?php
-    if (
-      !isset($_GET['find_incomplete'])
-    )
       echo "data['resume'] = " . $poser->work_through_pose_step . ';';
-    else if (
-      isset($_GET['find_incomplete'])
-    )
-      echo "data['resume'] = " . $poser->find_first_incomplete_pose() . ';';
     ?>
 
     if (resume !== -1) {

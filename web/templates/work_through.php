@@ -330,27 +330,25 @@ if (!$pose->pack)
           <?php endforeach; ?>
         </select>
         <label>
-          <input type="text" tabindex="361"/>
-          <a class="add_category" tabindex="362"
+          <input type="text" tabindex="370"/>
+          <a class="add_category" tabindex="380"
              onclick="add_category($(this))">
             Add
           </a>
         </label>
       </div>
-      <div class="focus-nav">
-        <a href="?find_incomplete" tabindex="363"
-           style="color:#424242;text-decoration:none;text-align: center">
-          <div class="navigate" style="position:static;font-size:80px">
-            &#9858;
-          </div>
-          <h1 style="margin-top:0">1st Unedited</h1>
-        </a>
+      <div style="text-align: center" class="focus-nav">
+        <div class="navigate" style="position:static;font-size:80px"
+             data-find_incomplete="" tabindex="390" onclick="navigate($(this))">
+          &#9858;
+        </div>
+        <h1 style="margin-top:0">1st Unedited</h1>
       </div>
       <div style="text-align: center" class="focus-nav">
         <div class="navigate" style="position:static;font-size:80px"
              data-current="work_through" data-target="work_through"
              data-resume="<?= $poser->work_through_pose_step + 1 ?>"
-             data-skip="" tabindex="364" onclick="navigate($(this))">
+             data-skip="" tabindex="400" onclick="navigate($(this))">
           &#10174;
         </div>
         <h1 style="margin-top:0">Skip</h1>
@@ -367,7 +365,7 @@ if (!$pose->pack)
   </nav>
   <nav class="navigate" data-current="work_through"
        data-target="<?= $poser->work_through_pose_step == $poser->pose_count()
-         ? 'review' : 'work_through' ?>" tabindex="365"
+         ? 'review' : 'work_through' ?>" tabindex="410"
        data-resume="<?= $poser->work_through_pose_step == $poser->pose_count()
          ? 'last' : $poser->work_through_pose_step + 1 ?>"
        onclick="navigate($(this))">

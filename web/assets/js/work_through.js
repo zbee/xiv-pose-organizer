@@ -10,6 +10,26 @@ function navigate(nav) {  // Process navigation data
     tags: [],
   };
   let navigate_data = nav.data();
+
+  console.log('navigate_data', navigate_data);
+  if (typeof navigate_data.find_incomplete !== 'undefined') {
+    console.log('navigate_data', navigate_data);
+    data['find_incomplete'] = '';
+    $.ajax(
+      {
+        url: 'middleman.php',
+        type: 'GET',
+        data: data,
+        async: false,
+      }
+    ).done(
+      function (response) {
+        load(navigate_data.target, response);
+      }
+    );
+    return;
+  }
+
   data[navigate_data.current] = ''
   data[navigate_data.target] = '';
   data['resume'] = navigate_data.resume;

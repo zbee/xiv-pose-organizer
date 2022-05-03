@@ -17,6 +17,12 @@ if (isset($_POST['configure']) or isset($_POST['configure_tags'])) {
 //endregion Handle a pose folder on the step of configuring settings
 
 //region Handle work_through steps, with a pose number
+if (isset($_GET['find_incomplete'])) {
+  exit(
+  $poser->find_first_incomplete_pose()
+  );
+}
+
 if (isset($_GET['work_through'])) {
   //Setup the file to hold the step in the work_through process
   file_put_contents('../data/resume.json', $_GET['resume'] ?? 0);

@@ -1,5 +1,4 @@
 Realistically
-* Switch '1st unedited' to use `nav()`
 * Autocomplete author names
 * Cast inputs to `new pose()`
 * Function to swap folder structures mid work_through
