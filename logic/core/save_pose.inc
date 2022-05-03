@@ -192,7 +192,7 @@ class save_pose extends navigator {
       )
         copy(
           $pose->duplicate_pose,
-          $destination . $file_name . $duplicate_extension
+          $destination . $file_name . '.' . $duplicate_extension
         );
 
       // Copy auxiliary files
@@ -231,7 +231,7 @@ class save_pose extends navigator {
       )
         copy(
           $pose->duplicate_pose,
-          $destination . $folder . $file_name . $duplicate_extension
+          $destination . $folder . $file_name . '.' . $duplicate_extension
         );
 
       // Copy auxiliary files
