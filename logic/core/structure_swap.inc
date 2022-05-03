@@ -8,9 +8,14 @@ class structure_swap extends save_pose {
   private string $path;
 
   /**
-   * @var bool new_structure to switch to
+   * @var string new_structure to switch to, to be used as a VarVar
    */
-  private bool $new_structure;
+  private string $new_structure;
+
+  /**
+   * @var string structure being switched from, to be used as a VarVar
+   */
+  private string $old_structure;
 
   /**
    * @var DirectoryIterator[] list of folders to be swapped
@@ -22,32 +27,80 @@ class structure_swap extends save_pose {
    */
   private array $files = [];
 
-  /**
-   * @var int ID of the current VarVar to swap
-   */
-  private int $current = 0;
+  public function swap(): void {
+    // Determine the new structure
+    if ($this->use_nested_structure_for_poses == 'true')
+      $this->new_structure = flat_structure;
+    else
+      $this->new_structure = nested_structure;
+    $this->old_structure =
+      $this->new_structure == flat_structure ? nested_structure
+        : flat_structure;
 
-  /**
-   * @var string VarVar of 'files' or 'folders'
-   */
-  private string $swapping_from = '';
+    // Assign working directory
+    $this->path = $this->poses_folder . '\\..working';
 
-  /**
-   * @var string VarVar of 'files' or 'folders'
-   */
-  private string $swapping_to = '';
+    // Read working directory
+    foreach (new DirectoryIterator($this->path) as $file_folder) {
+      // Read folders if going to a flat structure
+      if (
+        $file_folder->isDir() and
+        !$file_folder->isDot() and
+        $this->new_structure == flat_structure
+      )
+        $this->folders[] = new DirectoryIterator(
+          $file_folder->getPath() . '\\' . $file_folder->getFilename()
+        );
 
-  public function swap($new_structure): void {
+      // Read files if going to a nested structure
+      if ($file_folder->isFile() and $this->new_structure == nested_structure) {
+        // Get file name
+        $file_name = $file_folder->getFilename();
+        $file_name = explode('.', $file_name);
+        unset($file_name[count($file_name) - 1]);
+        $file_name = implode('.', $file_name);
+
+        // Set up file holder
+        if (!isset($this->files[$file_name]))
+          $this->files[$file_name] = [];
+
+        $this->files[$file_name][] = $file_folder;
+      }
+    }
+
+    // Generate new names to use
+    $this->swap_names();
+
+    // Begin moving files
+    foreach ($this->{$this->old_structure} as $index => $files) {
+      $this->save_progress($index);
+      $this->{'move_to_' . $this->new_structure}();
+    }
   }
 
-  private function swap_name(): string|array {
-    return 'Unimplemented';
+  public function save_progress(int $index): void {
+    file_put_contents(
+      '..\\data\\swap.json',
+      json_encode(
+        [
+          $index,
+          $this->new_structure == flat_structure
+            ? count($this->files)
+            : count(
+            $this->folders
+          ),
+        ]
+      )
+    );
   }
 
-  private function move_to_folder(): void {
+  private function swap_names() {
   }
 
-  private function move_to_loose(): void {
+  private function move_to_folders(): void {
+  }
+
+  private function move_to_files(): void {
   }
 
   private function clean_up(): void {

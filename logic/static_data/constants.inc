@@ -48,7 +48,10 @@ const race_aura   = ['aura', 'au ra', 'dragon', 'raen', 'xaela'];
 const race_hroth  = ['hroth', 'hrothgar', 'lion'];
 const race_bun    = ['bun', 'viera', 'bunny', 'rava', 'veena'];
 
-const this_file = true;
+const nested_structure = 'folders';
+const flat_structure   = 'files';
+
+const this_file  = true;
 const other_file = false;
 
 const skip = true;
