@@ -11,9 +11,7 @@ function navigate(nav) {  // Process navigation data
   };
   let navigate_data = nav.data();
 
-  console.log('navigate_data', navigate_data);
   if (typeof navigate_data.find_incomplete !== 'undefined') {
-    console.log('navigate_data', navigate_data);
     data['find_incomplete'] = '';
     $.ajax(
       {
@@ -345,5 +343,29 @@ function update_search_link(link, input) {
 body.on('keydown', 'span:focus', function (e) {
   if (e.keyCode == 13 || e.keyCode == 32) {
     copy_to_clipboard($(this));
+  }
+});
+
+// Offer author auto-complete
+body.on('keydown', '#author', function (e) {
+  var author_fill = body.find('#author_fill');
+  if (e.keyCode == 9 || e.keyCode == 16) {
+    if ($(this).val().length < author_fill.text().length) {
+      $(this).val(author_fill.text().slice(0, -1));
+      author_fill.html('&nbsp;');
+    }
+  } else {
+    $.ajax(
+      {
+        url: '/handle/work_through_authors.php',
+        type: 'POST',
+        data: {'author': $(this).val()},
+        async: true,
+      }
+    ).done(
+      function (response) {
+        author_fill.html(response + '?');
+      }
+    );
   }
 });

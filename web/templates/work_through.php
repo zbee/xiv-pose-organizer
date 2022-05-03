@@ -28,7 +28,9 @@ if (!$pose->pack)
   echo '<style>.pack-dependent{display:none}</style>';
 ?>
 
-<div style="display:none" id="loading"><img src="/assets/img/loading.gif"></div>
+<div style="display:none" id="loading">
+  <img src="/assets/img/loading.gif" alt="Page Loading">
+</div>
 
 <div id="work_through">
   <div id="progress">
@@ -134,7 +136,7 @@ if (!$pose->pack)
     </div>
 
     <div></div>
-    <div></div>
+    <div id="author_fill">&nbsp;</div>
 
     <label for="gender">Gender</label>
     <label for="race">Race</label>
