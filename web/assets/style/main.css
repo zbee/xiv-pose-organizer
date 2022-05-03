@@ -134,6 +134,10 @@ label {
     box-sizing: border-box;
 }
 
+select:focus, input[type='text']:focus, input[type='number']:focus {
+    border-color: rgba(0, 0, 255, 0.3) !important;
+}
+
 .error {
     border-color: rgba(255, 0, 0, 0.4) !important;
 }
