@@ -44,11 +44,11 @@ function navigate(nav) {  // Process navigation data
 
   // Add all input fields to the data
   body.find('input[name]').each(function () {
-    var name = nav.attr('name');
-    var value = nav.val();
+    var name = $(this).attr('name');
+    var value = $(this).val();
 
     if (name == 'pack')
-      value = nav.parent().parent().find('input:checked').val()
+      value = $(this).parent().parent().find('input:checked').val()
 
     if (name == 'has_preview')
       value = value !== '0';
@@ -59,35 +59,35 @@ function navigate(nav) {  // Process navigation data
 
   // Add all selected option fields to the data
   body.find('select').each(function () {
-    name = nav.attr('name');
-    value = nav.find('option:selected').attr('value');
+    name = $(this).attr('name');
+    value = $(this).find('option:selected').attr('value');
     if (typeof value === 'undefined')
       value = null;
 
     // Handle categories and tags separately
     if (name.startsWith('categories') || name.startsWith('tags')) {
       // The pose's tag/category
-      data[nav.attr('class')][name.charAt(name.length - 1)] = value;
+      data[$(this).attr('class')][name.charAt(name.length - 1)] = value;
 
       // Updating all of the categories/tags available
-      nav.find('option').each(function () {
+      $(this).find('option').each(function () {
         // Establish the array
         if (typeof data['_' + name.slice(0, -1)][name.charAt(name.length - 1)] == 'undefined')
           data['_' + name.slice(0, -1)][name.charAt(name.length - 1)] = [];
 
-        data['_' + name.slice(0, -1)][name.charAt(name.length - 1)].push(nav.val());
+        data['_' + name.slice(0, -1)][name.charAt(name.length - 1)].push($(this).val());
       });
     } else if (name.startsWith('verb')) {
       data[name.slice(0, -1)] = value;
       data[name] = [];
-      nav.find('option').each(function () {
-        data[name].push(nav.val());
+      $(this).find('option').each(function () {
+        data[name].push($(this).val());
       });
     } else if (name.startsWith('pack_name')) {
       data[name.slice(0, -1)] = value;
       data[name] = {};
-      nav.find('option').each(function () {
-        data[name][nav.val()] = nav.text();
+      $(this).find('option').each(function () {
+        data[name][$(this).val()] = $(this).text();
       });
     } else {
       if (name === 'submission-to-other')

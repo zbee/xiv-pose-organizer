@@ -259,6 +259,8 @@ class save_pose extends navigator {
 
   public function save(array $post_data) {
     //region Tracked data
+    if (!isset($post_data['pack_names']))
+      $post_data['pack_names'] = [];
     // Save tracked data (tags, cats, verbs, packs)
     $this->save_tracked(
       [
