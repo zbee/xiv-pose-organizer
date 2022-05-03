@@ -1,5 +1,6 @@
 // Navigate between poses - previous, next, skip to next
 let navigate_attempts = 1;
+
 function navigate(nav) {  // Process navigation data
   let data = {
     // Update settings
@@ -132,6 +133,7 @@ function navigate(nav) {  // Process navigation data
       }
     );
 }
+
 body.on('keydown', '.navigate:focus', function (e) {
   if (e.keyCode == 13 || e.keyCode == 32) {
     navigate($(this));
@@ -227,16 +229,19 @@ body.on('input', '#pack_names', function () {
 
       body.find('div[id="image"]').html(response.image);
 
-      body.find('input[name="link"]').val(response.link).prop('disabled', true);
-      body.find('input[name="author"]').val(response.author).prop('disabled', true);
-      body.find('input[name="other_people_posed"]').val(response.others_posed).prop('disabled', true);
+      body.find('input[name="link"]').val(response.link)
+        .prop('disabled', true).removeClass('error');
+      body.find('input[name="author"]').val(response.author)
+        .prop('disabled', true).removeClass('error');
+      body.find('input[name="other_people_posed"]').val(response.others_posed)
+        .prop('disabled', true).removeClass('error');
 
       $.each(response.categories, function (key, value) {
         body.find('select[name="categories' + key + '"]')
           .find('option').each(function () {
           if ($(this).val() === value) {
             $(this).prop('selected', true);
-            $(this).parent().prop('disabled', true);
+            $(this).parent().prop('disabled', true).removeClass('error');
           } else
             $(this).prop('selected', false);
         });
@@ -258,6 +263,7 @@ function add_column(col) {
     '<label><input type="text" tabindex="' + tab_long + '"/><a class="add_category" tabindex="' + (tab_long + 1) + '">Add </a></label>'
   );
 }
+
 body.on('keydown', '.add_column:focus', function (e) {
   if (e.keyCode == 13 || e.keyCode == 32) {
     add_column($(this));
