@@ -9,6 +9,7 @@ file_put_contents('../data/resume.json', $poser->current_pose(false, true));
 $path = str_replace($poser->poses_folder, '', $pose->path);
 $path = explode('\\', $path);
 $file = $path[count($path) - 1];
+/** @noinspection PhpInvalidStringOffsetUsageInspection */
 unset($path[count($path) - 1]);
 $path = implode("<wbr>\\", $path);
 
