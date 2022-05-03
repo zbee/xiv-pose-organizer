@@ -171,7 +171,7 @@ if (!$pose->pack)
         <input type="number" name="other_people_required"
                id="other_people_required" class="pack-dependent"
                value="<?= $pose->other_people_required ?>"
-               style="width:70%;padding:0 10px" min="1" max="15" tabindex="100">
+               style="width:70%;padding:0 10px" min="0" max="15" tabindex="100">
       </div>
       <label for="other_people_posed" class="pack-dependent">
         Others Posed
@@ -179,7 +179,7 @@ if (!$pose->pack)
       <div style="white-space: nowrap;height: 30px">
         <input type="number" name="other_people_posed" id="other_people_posed"
                value="<?= $pose->other_people_posed ?>"
-               style="width:70%;padding:0 10px" min="1" max="15"
+               style="width:70%;padding:0 10px" min="0" max="15"
                class="pack-dependent" tabindex="110">
       </div>
     </div>
