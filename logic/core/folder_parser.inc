@@ -179,7 +179,8 @@ class pose_folder_parser extends settings {
           foreach (constant("race_$race") as $race_race) // List of race aliases
             if (str_contains($pose_name, $race_race)) {
               $pose_race = constant("race_$race")[0];
-              $pose_name = str_replace($race_race, '', $pose_name);
+              // Add an indicator of where the race was
+              $pose_name = str_replace($race_race, '*$@', $pose_name);
               break;
             }
           if ($pose_race != null)
@@ -191,9 +192,15 @@ class pose_folder_parser extends settings {
         $gender = null;
         // Check for commonly occurring m or f next to the race
         if ($pose_race != null) {
-          if (str_contains($pose_name, ' m '))
+          if (
+            str_contains($pose_name, ' m ') or
+            str_contains($pose_name, '*$@m')
+          )
             $gender = gender_male;
-          else if (str_contains($pose_name, ' f '))
+          else if (
+            str_contains($pose_name, ' f ') or
+            str_contains($pose_name, '*$@f')
+          )
             $gender = gender_female;
 
           // Trim the gender from the file name
@@ -210,6 +217,8 @@ class pose_folder_parser extends settings {
           $pose_name = str_replace('female', '', $pose_name);
           $pose_name = str_replace('male', '', $pose_name);
         }
+        // Strip race indicator
+        $pose_name = str_replace('*$@', '', $pose_name);
         //endregion Check for gender
 
         //region Check for author
@@ -420,7 +429,7 @@ class pose_folder_parser extends settings {
           foreach (races as $race) {
             foreach (constant("race_$race") as $race_race)
               if (str_contains($pose_name, $race_race)) {
-                $pose_name = str_replace($race_race, '', $pose_name);
+                $pose_name = str_replace($race_race, '*$@', $pose_name);
                 $pose_race = true;
                 break;
               }
@@ -428,9 +437,15 @@ class pose_folder_parser extends settings {
               break;
           }
           if ($pose_race != null) {
-            if (str_contains($pose_name, ' m '))
+            if (
+              str_contains($pose_name, ' m ') or
+              str_contains($pose_name, '*$@m')
+            )
               $pose_name = str_replace(' m ', '', $pose_name);
-            else if (str_contains($pose_name, ' f '))
+            else if (
+              str_contains($pose_name, ' f ') or
+              str_contains($pose_name, '*$@f')
+            )
               $pose_name = str_replace(' f ', '', $pose_name);
           }
           else if (str_contains($pose_name, 'male')) {

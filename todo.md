@@ -1,6 +1,5 @@
 Realistically
 
-* Race+Gender detection should not require a space
 * Copy fields from last pose
 * Search XIVMA for author
 * Reset image button - eg reset back to detected picture after selecting a pose
