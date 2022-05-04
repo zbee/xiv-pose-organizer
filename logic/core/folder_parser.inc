@@ -192,23 +192,17 @@ class pose_folder_parser extends settings {
         $gender = null;
         // Check for commonly occurring m or f next to the race
         if ($pose_race != null) {
-          if (
-            str_contains($pose_name, ' m ') or
-            str_contains($pose_name, '*$@m')
-          )
-            $gender = gender_male;
-          else if (
-            str_contains($pose_name, ' f ') or
-            str_contains($pose_name, '*$@f')
-          )
-            $gender = gender_female;
-
-          // Trim the gender from the file name
-          $pose_name = str_replace(' f ', '', $pose_name);
-          $pose_name = str_replace(' m ', '', $pose_name);
+          if (str_contains($pose_name, ' m '))
+            $pose_name = str_replace(' m ', 'male', $pose_name);
+          else if (str_contains($pose_name, '*$@m'))
+            $pose_name = str_replace('*$@m', 'male', $pose_name);
+          else if (str_contains($pose_name, ' f '))
+            $pose_name = str_replace(' f ', 'female', $pose_name);
+          else if (str_contains($pose_name, '*$@f'))
+            $pose_name = str_replace('*$@f', 'female', $pose_name);
         }
         // Check for also-common female or male specification
-        else if (str_contains($pose_name, 'male')) {
+        if (str_contains($pose_name, 'male')) {
           $gender = gender_male;
           if (str_contains($pose_name, 'female'))
             $gender = gender_female;
@@ -437,18 +431,16 @@ class pose_folder_parser extends settings {
               break;
           }
           if ($pose_race != null) {
-            if (
-              str_contains($pose_name, ' m ') or
-              str_contains($pose_name, '*$@m')
-            )
-              $pose_name = str_replace(' m ', '', $pose_name);
-            else if (
-              str_contains($pose_name, ' f ') or
-              str_contains($pose_name, '*$@f')
-            )
-              $pose_name = str_replace(' f ', '', $pose_name);
+            if (str_contains($pose_name, ' m '))
+              $pose_name = str_replace(' m ', 'male', $pose_name);
+            else if (str_contains($pose_name, '*$@m'))
+              $pose_name = str_replace('*$@m', 'male', $pose_name);
+            else if (str_contains($pose_name, ' f '))
+              $pose_name = str_replace(' f ', 'female', $pose_name);
+            else if (str_contains($pose_name, '*$@f'))
+              $pose_name = str_replace('*$@f', 'female', $pose_name);
           }
-          else if (str_contains($pose_name, 'male')) {
+          if (str_contains($pose_name, 'male')) {
             if (str_contains($pose_name, 'female'))
               $pose_name = str_replace('female', '', $pose_name);
             else
