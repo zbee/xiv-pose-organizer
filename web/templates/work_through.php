@@ -116,6 +116,7 @@ if (!$pose->pack)
       <input type="text" name="name" id="name" value="<?= $pose->name ?>"
              tabindex="40">
     </div>
+
     <div></div>
     <div style="text-align:right;position:relative;top:-15px" class="focus">
       <a href="" target="_blank" tabindex="50" id="xivma_search"
@@ -123,6 +124,7 @@ if (!$pose->pack)
         Search on XIVMod
       </a>
     </div>
+
     <?php if ($poser->want_pose_link): ?>
       <label for="link">Pose Link</label>
       <div class="focus">
@@ -134,6 +136,14 @@ if (!$pose->pack)
     <div class="focus">
       <input type="text" name="author" id="author" value="<?= $pose->author ?>"
              tabindex="70">
+    </div>
+
+    <div></div>
+    <div style="text-align:right;position:relative;top:-15px" class="focus">
+      <a href="" target="_blank" tabindex="71" id="xivma_author_search"
+         data-link="https://www.xivmodarchive.com/search?types=14%2C11%2C5%2C13%2C6&basic_text=">
+        Search on XIVMod
+      </a>
     </div>
 
     <div></div>

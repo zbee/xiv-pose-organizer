@@ -1,7 +1,8 @@
 Realistically
 
+* `missing_require_fields()` should receive data from the page on which fields
+  are desired
 * Copy fields from last pose
-* Search XIVMA for author
 * Reset image button - eg reset back to detected picture after selecting a pose
   pack
 * Add key to file names, so working files that exist under the key can be

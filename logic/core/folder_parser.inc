@@ -454,6 +454,7 @@ class pose_folder_parser extends settings {
             else
               $pose_name = str_replace('male', '', $pose_name);
           }
+          $pose_name = str_replace('*$@', '', $pose_name);
 
           if (str_contains($pose_name, '[')) {
             $author    = explode('[', $pose_name);

@@ -329,6 +329,9 @@ body.on('input', 'input, select', function () {
 body.on('input', 'input[name="name"]', function () {
   update_search_link('xivma_search', 'input[name="name"]');
 });
+body.on('input', 'input[name="author"]', function () {
+  update_search_link('xivma_author_search', 'input[name="author"]');
+});
 body.on('input', 'select[name="pack_names"]', function () {
   update_search_link('xivma_pack_search', 'select[name="pack_names"]');
 });
@@ -358,6 +361,7 @@ body.on('keydown', '#author', function (e) {
     if ($(this).val().length < author_fill.text().length) {
       $(this).val(author_fill.text().slice(0, -1));
       author_fill.html('&nbsp;');
+      update_search_link('xivma_author_search', 'input[name="author"]');
     }
   } else {
     $.ajax(
