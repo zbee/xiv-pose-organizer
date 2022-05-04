@@ -30,7 +30,7 @@ if (!$pose->pack)
 ?>
 
 <div style="display:none" id="loading">
-  <img src="/assets/img/loading.gif" alt="Page Loading">
+  <span id="loader">&#9187;</span>
 </div>
 
 <div id="work_through">
@@ -80,7 +80,7 @@ if (!$pose->pack)
       $pose->file_format != $poser->format_for_pose_normalization
     ): ?>
       <p>File Format</p>
-      <span style="background: rgba(255, 0, 0, 0.2);">
+      <span style="background: var(--nord11); color: var(--nord0)">
         <?= ucfirst(constant('file_format_' . $pose->file_format)) ?>
         (needs changed)
       </span>
@@ -89,7 +89,7 @@ if (!$pose->pack)
       $pose->file_format == $poser->format_for_pose_normalization
     ): ?>
       <p>File Format</p>
-      <span style="background: rgba(0, 255, 0, 0.2);">
+      <span style="background: var(--nord14); color: var(--nord0)">
         <?= ucfirst(constant('file_format_' . $pose->file_format)) ?>
       </span>
     <?php endif; ?>
@@ -120,7 +120,7 @@ if (!$pose->pack)
     <div style="text-align:right;position:relative;top:-15px" class="focus">
       <a href="" target="_blank" tabindex="50" id="xivma_search"
          data-link="https://www.xivmodarchive.com/search?types=14%2C11%2C5%2C13%2C6&basic_text=">
-        Search on XIVModArchive
+        Search on XIVMod
       </a>
     </div>
     <?php if ($poser->want_pose_link): ?>
@@ -215,8 +215,8 @@ if (!$pose->pack)
           ><?= $pack ?></option>
         <?php endforeach; ?>
       </select>
-      <label>
-        <input type="text" tabindex="140"/>
+      <label style="margin-top:2px">
+        <input type="text" tabindex="140" style="width: 75%"/>
         <a class="add_category" tabindex="150">
           Add
         </a>
@@ -227,7 +227,7 @@ if (!$pose->pack)
          class="pack-dependent focus">
       <a href="" target="_blank" id="xivma_pack_search" tabindex="160"
          data-link="https://www.xivmodarchive.com/search?types=14%2C11%2C5%2C13%2C6&basic_text=">
-        Search on XIVModArchive
+        Search on XIVMod
       </a>
     </div>
   </div>
@@ -346,14 +346,14 @@ if (!$pose->pack)
              data-find_incomplete="" tabindex="390" onclick="navigate($(this))">
           &#9858;
         </div>
-        <h1 style="margin-top:0">1st Unedited</h1>
+        <h1 style="margin-top:0">Unedited</h1>
       </div>
       <div style="text-align: center" class="focus-nav">
         <div class="navigate" style="position:static;font-size:80px"
              data-current="work_through" data-target="work_through"
              data-resume="<?= $poser->work_through_pose_step + 1 ?>"
              data-skip="" tabindex="400" onclick="navigate($(this))">
-          &#10174;
+          &#11122;
         </div>
         <h1 style="margin-top:0">Skip</h1>
       </div>

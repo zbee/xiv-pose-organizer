@@ -11,7 +11,9 @@ $poser = new pose_organizer();
   <link rel="stylesheet" href="assets/style/main.css">
 </head>
 <body>
-<img src="assets/img/loading.gif" alt="Loading...">
+<div id="loading">
+  <span id="loader">&#9187;</span>
+</div>
 </body>
 
 <script src="assets/js/jquery.js"></script>

@@ -115,8 +115,6 @@ function navigate(nav) {  // Process navigation data
     }
   });
 
-  // Load the next page
-  body.html('<img src="assets/img/loading.gif" alt="Loading...">');
   // Request the next page
   $.ajax(
     {
@@ -129,6 +127,7 @@ function navigate(nav) {  // Process navigation data
     // Draw the next page
     .done(
       function (response) {
+        body.find('#loading').hide();
         load(navigate_data.target, navigate_data.resume);
       }
     );

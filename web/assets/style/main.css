@@ -1,26 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300&display=swap');
+@import "/assets/style/nord.css";
+
 body {
     width: 100%;
     min-height: 100%;
     text-align: center;
-    background: #F5F5F5;
     overflow-x: hidden;
+    font-family: 'Roboto Slab', serif;
 }
 
-.focus:focus-within, :focus {
+:focus {
     outline: none;
 }
 
-.focus:focus-within::before {
-    content: url('/assets/img/arrow.png');
-    position: relative;
-    top: 10px;
+.focus:focus-within {
+    outline: dashed;
 }
 
 a, a:active, a:hover, a:visited {
-    color: #1E88E5;
-    text-decoration: underline;
     cursor: pointer;
     outline: none;
+    text-decoration: none;
+}
+
+a[href]:after {
+    content: "⎋";
+    display: inline-block;
+    transform: rotate(90deg);
 }
 
 a:focus, .navigate:focus, .focus-nav:focus-within {
@@ -35,7 +41,6 @@ a:focus, .navigate:focus, .focus-nav:focus-within {
     position: absolute;
     top: 15px;
     left: 15px;
-    background: #E0E0E0;
     border-radius: 10px;
     padding: 10px;
     text-align: center;
@@ -43,13 +48,11 @@ a:focus, .navigate:focus, .focus-nav:focus-within {
 }
 
 #configure {
-    background: #E0E0E0;
     border-radius: 10px;
     padding: 10px;
     text-align: center;
     width: 450px;
     margin: 100px auto auto;
-    color: #424242;
     display: grid;
     grid-template-columns: 10% 80% 10%;
     align-items: center;
@@ -102,12 +105,29 @@ label {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.6);
     z-index: 100;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 120px;
 }
+
+#loading #loader {
+    animation: spin 2s linear infinite;
+    width: 100px;
+    height: 100px;
+    line-height: 90px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 
 #work_through {
     margin: 20px 100px;
@@ -121,25 +141,16 @@ label {
     grid-template-rows: 1fr auto;
     row-gap: 20px;
     column-gap: 20px;
-    color: #424242;
 }
 
 #work_through select, #work_through select:focus,
 #work_through input[type='text'], #work_through input[type='text']:focus,
 #work_through input[type='number'], #work_through input[type='number']:focus {
-    border: 3px solid rgba(0, 0, 0, 0.2);
     outline: none;
     border-radius: 5px;
     padding: 4px 10px;
     box-sizing: border-box;
-}
-
-select:focus, input[type='text']:focus, input[type='number']:focus {
-    border-color: rgba(0, 0, 255, 0.3) !important;
-}
-
-.error {
-    border-color: rgba(255, 0, 0, 0.4) !important;
+    width: 100%;
 }
 
 #work_through select {
@@ -160,7 +171,6 @@ select:focus, input[type='text']:focus, input[type='number']:focus {
 }
 
 #work_through #info span {
-    background: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 4px 10px;
     display: inline-block;
@@ -229,7 +239,6 @@ select:focus, input[type='text']:focus, input[type='number']:focus {
 
 #work_through #progress > div {
     padding: 0;
-    background: rgba(0, 0, 0, 0.1);
     overflow-x: hidden;
 }
 
@@ -237,13 +246,57 @@ select:focus, input[type='text']:focus, input[type='number']:focus {
     margin: 0;
     padding: 4px 0 4px 10px;
     text-align: center;
-    background: darkseagreen;
     white-space: nowrap;
 }
 
 #work_through > div {
-    background: #E0E0E0;
     border-radius: 10px;
     padding: 10px;
     text-align: left;
+}
+
+/*******************************************************************************
+Colors
+******************************************************************************/
+
+body, #loading {
+    background: var(--nord0);
+    color: var(--nord5)
+}
+
+.tip, #configure, #work_through > div {
+    background: var(--nord1)
+}
+
+select, select:focus, input[type='text'], input[type='text']:focus,
+input[type='number'], input[type='number']:focus {
+    border: 3px solid var(--nord3)
+}
+
+select, select:focus, input[type='text'], input[type='text']:focus,
+input[type='number'], input[type='number']:focus, #progress > div, #info span {
+    background: var(--nord2);
+    color: var(--nord4)
+}
+
+select:disabled, input:disabled {
+    background: var(--nord0);
+    border-color: var(--nord0)
+}
+
+#work_through #progress #bar {
+    background: var(--nord9);
+    color: var(--nord6)
+}
+
+a, a:active, a:hover, a:visited {
+    color: var(--nord8)
+}
+
+select:focus, input[type='text']:focus, input[type='number']:focus {
+    border-color: var(--nord9) !important;
+}
+
+.error {
+    border-color: var(--nord11) !important;
 }
