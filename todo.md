@@ -1,6 +1,5 @@
 Realistically
 
-* Gender detection provide recognizable null value
 * Race+Gender detection should not require a space
 * Copy fields from last pose
 * Search XIVMA for author

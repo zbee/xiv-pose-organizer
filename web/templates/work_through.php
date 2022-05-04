@@ -144,7 +144,7 @@ if (!$pose->pack)
     <select multiple name="gender" id="gender" tabindex="80">
       <?php foreach (genders as $gender): ?>
         <option value="<?= (int)constant('gender_' . $gender) ?>"
-          <?= $pose->gender == constant('gender_' . $gender) ? 'selected'
+          <?= $pose->gender === constant('gender_' . $gender) ? 'selected'
             : '' ?>><?= $gender ?></option>
       <?php endforeach; ?>
     </select>
