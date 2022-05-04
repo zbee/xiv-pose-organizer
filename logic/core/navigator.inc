@@ -52,7 +52,7 @@ class navigator extends maintain_tagging {
    * @return int the percentage of progress through the workload
    */
   public function progress_bar_percentage(): int {
-    return floor($this->work_through_pose_step / $this->pose_count()) * 100;
+    return round($this->work_through_pose_step / $this->pose_count() * 100);
   }
 
   /**
