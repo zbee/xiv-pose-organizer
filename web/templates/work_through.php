@@ -108,6 +108,31 @@ if (!$pose->pack)
         No
       </label>
     </div>
+
+    <label for="pack_names" class="pack-dependent">Pack Name</label>
+    <div class="pack-dependent">
+      <select name="pack_names" id="pack_names" tabindex="36" multiple>
+        <?php foreach ($poser->get_packs() as $key => $pack): ?>
+          <option value="<?= $key ?>"
+            <?= $pose->pack_name == $key ? 'selected' : '' ?>
+          ><?= $pack ?></option>
+        <?php endforeach; ?>
+      </select>
+      <label style="margin-top:2px">
+        <input type="text" tabindex="37" style="width: 75%"/>
+        <a class="add_category" tabindex="38">
+          Add
+        </a>
+      </label>
+    </div>
+    <div class="pack-dependent"></div>
+    <div style="text-align:right;position:relative;top:-15px"
+         class="pack-dependent focus">
+      <a href="" target="_blank" id="xivma_pack_search" tabindex="38"
+         data-link="https://www.xivmodarchive.com/search?types=14%2C11%2C5%2C13%2C6&basic_text=">
+        Search on XIVMod
+      </a>
+    </div>
   </div>
 
   <div id="data">
@@ -215,31 +240,6 @@ if (!$pose->pack)
         Dominant in group pose
       </option>
     </select>
-
-    <label for="pack_names" class="pack-dependent">Pack Name</label>
-    <div class="pack-dependent">
-      <select name="pack_names" id="pack_names" tabindex="130" multiple>
-        <?php foreach ($poser->get_packs() as $key => $pack): ?>
-          <option value="<?= $key ?>"
-            <?= $pose->pack_name == $key ? 'selected' : '' ?>
-          ><?= $pack ?></option>
-        <?php endforeach; ?>
-      </select>
-      <label style="margin-top:2px">
-        <input type="text" tabindex="140" style="width: 75%"/>
-        <a class="add_category" tabindex="150">
-          Add
-        </a>
-      </label>
-    </div>
-    <div class="pack-dependent"></div>
-    <div style="text-align:right;position:relative;top:-15px"
-         class="pack-dependent focus">
-      <a href="" target="_blank" id="xivma_pack_search" tabindex="160"
-         data-link="https://www.xivmodarchive.com/search?types=14%2C11%2C5%2C13%2C6&basic_text=">
-        Search on XIVMod
-      </a>
-    </div>
   </div>
 
   <div id="tags">

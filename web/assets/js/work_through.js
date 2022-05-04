@@ -141,7 +141,7 @@ body.on('keydown', '.navigate:focus', function (e) {
 
 // Hide pack-based controls if it's not a pack
 body.on('click', 'input[name="pack"]', function () {
-  body.find('#data .pack-dependent').toggle($(this).val() == 1);
+  body.find('.pack-dependent').toggle($(this).val() == 1);
 });
 
 // Add items to <select> lists
