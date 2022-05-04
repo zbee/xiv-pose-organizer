@@ -89,6 +89,12 @@ a:focus, .navigate:focus, .focus-nav:focus-within {
     left: 0;
 }
 
+#work_through .navigate:nth-of-type(2) {
+    left: 40px;
+    top: 80px;
+    font-size: 60px;
+}
+
 #work_through .navigate:last-of-type {
     right: 0;
 }

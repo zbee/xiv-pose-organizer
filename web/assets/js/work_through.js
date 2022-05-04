@@ -39,11 +39,12 @@ function navigate(nav) {  // Process navigation data
     request_type = 'GET';
 
   // Don't allow navigation if the fields are empty, with triple click bypass
-  if (missing_require_fields() === true && navigate_attempts < 3) {
+  if (missing_require_fields() === true && navigate_attempts < 3 && typeof navigate_data.reset === 'undefined') {
     navigate_attempts++;
     return;
-  } else if (missing_require_fields() === true && navigate_attempts >= 3) {
+  } else if (typeof navigate_data.reset !== 'undefined' || (missing_require_fields() === true && navigate_attempts >= 3)) {
     navigate_attempts = 1;
+    body.find('#loading').show();
     $.ajax(
       {
         url: 'middleman.php',

@@ -378,6 +378,11 @@ if (!$pose->pack)
     &laquo;
   </nav>
   <nav class="navigate" data-current="work_through"
+       data-target="work_through" tabindex="2" onclick="navigate($(this))"
+       data-resume="<?= $poser->work_through_pose_step ?>" data-reset="">
+    &#11119;
+  </nav>
+  <nav class="navigate" data-current="work_through"
        data-target="<?= $poser->work_through_pose_step == $poser->pose_count()
          ? 'review' : 'work_through' ?>" tabindex="410"
        data-resume="<?= $poser->work_through_pose_step == $poser->pose_count()
