@@ -174,8 +174,8 @@ class settings extends utilities {
     $this->start_with_default_tags          = $start_with_default_tags;
     $this->use_nested_structure_for_poses   =
       $use_nested_structure_for_poses == 'true';
-    $this->want_pose_link                   = $want_pose_link;
-    $this->want_pose_previews               = $want_pose_previews;
+    $this->want_pose_link                   = $want_pose_link == 'true';
+    $this->want_pose_previews               = $want_pose_previews == 'true';
     $this->poses_folder                     =
       $poses_folder
       ??

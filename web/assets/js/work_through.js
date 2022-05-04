@@ -39,10 +39,10 @@ function navigate(nav) {  // Process navigation data
     request_type = 'GET';
 
   // Don't allow navigation if the fields are empty, with triple click bypass
-  if (missing_require_fields() === true && navigate_attempts < 3 && typeof navigate_data.reset === 'undefined') {
+  if (missing_required_fields() === true && navigate_attempts < 3 && typeof navigate_data.reset === 'undefined') {
     navigate_attempts++;
     return;
-  } else if (typeof navigate_data.reset !== 'undefined' || (missing_require_fields() === true && navigate_attempts >= 3)) {
+  } else if (typeof navigate_data.reset !== 'undefined' || (missing_required_fields() === true && navigate_attempts >= 3)) {
     navigate_attempts = 1;
     body.find('#loading').show();
     $.ajax(
@@ -271,11 +271,10 @@ body.on('keydown', '.add_column:focus', function (e) {
 });
 
 // Require fields
-function missing_require_fields() {
+function missing_required_fields() {
   let required = [
     body.find('input[name="name"]'),
     body.find('input[name="author"]'),
-    body.find('input[name="link"]'),
     body.find('select[name="gender"]'),
     body.find('select[name="race"]'),
     body.find('select[name="categories0"]'),
@@ -286,6 +285,9 @@ function missing_require_fields() {
     body.find('select[name="tags2"]'),
     body.find('select[name="verbs"]'),
   ];
+  if (required_data.link) {
+    required.push(body.find('input[name="link"]'));
+  }
   let required_pack = [
     body.find('input[name="other_people_required"]'),
     body.find('input[name="other_people_posed"]'),
@@ -315,6 +317,10 @@ function missing_require_fields() {
       } else
         selector.removeClass('error');
     });
+  }
+
+  if (required_data.preview && body.find('input[name="has_preview"]').val() === '0') {
+    body.find('div[id="image"] > div').addClass('error');
   }
 
   return return_value;

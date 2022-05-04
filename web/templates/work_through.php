@@ -27,6 +27,12 @@ if ($pose->has_preview) {
 // Hide pack-dependent elements
 if (!$pose->pack)
   echo '<style>.pack-dependent{display:none}</style>';
+
+// Pass on variably required fields
+$script = '<script>required_data = {';
+$script .= $poser->want_pose_previews ? 'preview: true,' : 'preview: false,';
+$script .= $poser->want_pose_link ? 'link: true,' : 'link: false,';
+echo $script . '}</script>';
 ?>
 
 <div style="display:none" id="loading">
@@ -59,21 +65,19 @@ if (!$pose->pack)
             tabindex="20"><sub><?= $poser->poses_folder ?></sub><?= $path ?></span>
     </div>
 
-    <?php if ($poser->want_pose_previews): ?>
-      <div id="image">
-        <?= $pose->has_preview ? "<img src='$image' alt='Pose preview image'>
-            <input name='has_preview' value='1' type='hidden'>
-            <input name='image_name' value='$image' type='hidden'>" : '<div style="border: rgba(0, 0, 0, 0.1) solid 4px;padding:10px;
-            border-radius:10px">
-             
-          <h2>Ctrl+V</h2> to paste preview image (<code>WIN+Shift+S</code>)
-          </div>
-          <input name="has_preview" value="0" type="hidden">' ?>
-      </div>
-      <form id="upload_preview_image" style="display:none">
-        <input name="file" type="file" id="preview_image_input"/>
-      </form>
-    <?php endif ?>
+    <div id="image">
+      <?= $pose->has_preview ? "<img src='$image' alt='Pose preview image'>
+          <input name='has_preview' value='1' type='hidden'>
+          <input name='image_name' value='$image' type='hidden'>" : '<div style="border: rgba(0, 0, 0, 0.1) solid 4px;padding:10px;
+          border-radius:10px">
+           
+        <h2>Ctrl+V</h2> to paste preview image (<code>WIN+Shift+S</code>)
+        </div>
+        <input name="has_preview" value="0" type="hidden">' ?>
+    </div>
+    <form id="upload_preview_image" style="display:none">
+      <input name="file" type="file" id="preview_image_input"/>
+    </form>
 
     <?php if (
       $poser->normalize_poses and
@@ -150,13 +154,12 @@ if (!$pose->pack)
       </a>
     </div>
 
-    <?php if ($poser->want_pose_link): ?>
-      <label for="link">Pose Link</label>
-      <div class="focus">
-        <input type="text" name="link" id="link" value="<?= $pose->link ?>"
-               tabindex="60">
-      </div>
-    <?php endif; ?>
+    <label for="link">Pose Link</label>
+    <div class="focus">
+      <input type="text" name="link" id="link" value="<?= $pose->link ?>"
+             tabindex="60">
+    </div>
+
     <label for="author">Pose Author</label>
     <div class="focus">
       <input type="text" name="author" id="author" value="<?= $pose->author ?>"
