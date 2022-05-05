@@ -121,7 +121,9 @@ echo $script . '}</script>';
     <label for="pack_names" class="pack-dependent">Pack Name</label>
     <div class="pack-dependent">
       <select name="pack_names" id="pack_names" tabindex="36" multiple>
-        <?php foreach ($poser->get_packs() as $key => $pack): ?>
+        <?php
+        foreach ($poser->get_packs() as $key => $pack):
+          ?>
           <option value="<?= $key ?>"
             <?= $pose->pack_name == $key ? 'selected' : '' ?>
           ><?= $pack ?></option>

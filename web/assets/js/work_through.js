@@ -171,9 +171,15 @@ function add_category(cat) {
 
   if (!skip) {
     cat.parent().find('input').val('')
-    select.append(
-      '<option value="' + value + '">' + text + '</option>'
-    );
+    if (select.attr('id') === 'pack_names') {
+      select.prepend(
+        '<option value="' + value + '">' + text + '</option>'
+      );
+    } else {
+      select.append(
+        '<option value="' + value + '">' + text + '</option>'
+      );
+    }
   }
 }
 
@@ -199,7 +205,7 @@ body.on('input', '#other_people_posed', function () {
 })
 
 // Enforce category selections when a pose pack is selected
-body.on('input', '#pack_names', function () {
+body.on('focusout', '#pack_names', function () {
   body.find('#loading').show();
   $.ajax(
     {

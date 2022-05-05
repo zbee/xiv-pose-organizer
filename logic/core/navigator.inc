@@ -68,7 +68,7 @@ class navigator extends maintain_tagging {
     else {
       $this->packs = json_decode(file_get_contents('../data/packs.json'), true);
     }
-    return array_reverse($this->packs);
+    return $this->packs;
   }
 
   public function find_pack($identifier): string {
