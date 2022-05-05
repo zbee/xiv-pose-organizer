@@ -24,7 +24,7 @@ class pose_organizer extends structure_swap {
     else if (file_exists($dots . 'data/resume.json')) {
       $resume_at = file_get_contents($dots . 'data/resume.json');
       $resume_at = (int)$resume_at;
-      $this->parse_folder(false, !$prevent_checksum);
+      $this->parse_folder(false, $prevent_checksum);
       $this->work_through_pose_step = $resume_at;
       $this->work_through_step      = step_work_through;
     }
