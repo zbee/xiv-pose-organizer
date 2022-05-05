@@ -9,11 +9,10 @@ if (isset($_POST['configure'])) {
     $settings = array_merge($settings, $_POST);
   }
 
-  if ($settings['poses_folder'] === null || $settings['poses_folder'] === '')
+  if ($settings['poses_folder'] === null || $settings['poses_folder'] === '') {
     $settings['poses_folder'] =
-      getenv("HOMEDRIVE") .
-      getenv("HOMEPATH") .
-      '\Documents\Anamnesis\Poses';
+      getenv("HOMEDRIVE") . getenv("HOMEPATH") . '\Documents\Anamnesis\Poses';
+  }
 
   unset($_POST['configure']);
 

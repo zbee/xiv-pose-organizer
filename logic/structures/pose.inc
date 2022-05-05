@@ -199,8 +199,9 @@ class pose {
    *                                pose: a value of true
    */
   public function save(array $posted_data): void {
-    foreach ($posted_data as $key => $value)
+    foreach ($posted_data as $key => $value) {
       $this->$key = $value;
+    }
     $this->worked_through = true;
     $this->skipped        = false;
   }

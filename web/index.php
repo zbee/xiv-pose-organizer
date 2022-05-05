@@ -48,8 +48,8 @@ $poser = new pose_organizer();
       }
     ).done(
       function (html) {
-        $('body').html(html);
         body.find('#loading').hide();
+        $('body').html(html);
       }
     );
   }

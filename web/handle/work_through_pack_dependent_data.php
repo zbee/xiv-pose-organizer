@@ -2,8 +2,8 @@
 require '../../logic/autoload.php';
 $poser = new pose_organizer('../../');
 
-if (isset($_POST['key']))
-  foreach ($poser->poses as $pose)
+if (isset($_POST['key'])) {
+  foreach ($poser->poses as $pose) {
     if ($pose->pack_name == $_POST['key']) {
       $time  = time();
       $image = "<img src='$pose->image_name?$time' alt='Pose preview image' />
@@ -22,3 +22,5 @@ if (isset($_POST['key']))
       )
       );
     }
+  }
+}

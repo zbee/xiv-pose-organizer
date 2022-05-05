@@ -111,8 +111,9 @@ class settings extends utilities {
    *                     %gender% is implemented separately from tags
    *                     %categories% are abbreviated categories that are
    *                     default shown on folder names
-   *                     requires: separate_tagging_between_file_and_folder = true
-   *                     default: %categories% %tag_1% %tag_2% %tag_3% %verb%
+   *                     requires: separate_tagging_between_file_and_folder =
+   *                     true default: %categories% %tag_1% %tag_2% %tag_3%
+   *                     %verb%
    *                              %sub% %race% %gender% %author% '%pose_name%'
    */
   protected string $file_name_format = "%categories% %tag_1% %tag_2% %tag_3% " .
@@ -154,12 +155,20 @@ class settings extends utilities {
     "%tags% %group% %author% '%pose_name%'",
   ) {
     if (file_exists('../data/settings.json')) {
-      extract(json_decode(file_get_contents('../data/settings.json'), true));
-      if ($poses_folder === null || $poses_folder === '')
+      $settings = json_decode(
+        file_get_contents('../data/settings.json'),
+        true,
+        512,
+        JSON_THROW_ON_ERROR
+      );
+      extract($settings, EXTR_OVERWRITE);
+
+      if ($poses_folder === null || $poses_folder === '') {
         $poses_folder =
           getenv("HOMEDRIVE") .
           getenv("HOMEPATH") .
           '\Documents\Anamnesis\Poses';
+      }
     }
     $this->always_attribute_to_author       = $always_attribute_to_author;
     $this->author_format                    = $author_format;

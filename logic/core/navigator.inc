@@ -13,10 +13,10 @@ class navigator extends maintain_tagging {
    * @return int of the new step
    */
   public function find_first_incomplete_pose(): int {
-    for ($i = 0; $i < count($this->poses); $i++) {
+    for ($i = 0, $iMax = count($this->poses); $i < $iMax; $i++) {
       if ($this->poses[$i]->worked_through !== true) {
         $this->work_through_pose_step = $i;
-        file_put_contents('../data/resume.json', (int)$i);
+        file_put_contents('../data/resume.json', $i);
         return $i;
       }
     }
@@ -31,12 +31,14 @@ class navigator extends maintain_tagging {
   public function current_pose($resume = false, bool $key = false): pose|int {
     // Determine which pose to return
     $pose = $this->work_through_pose_step;
-    if ($resume !== false)
+    if ($resume !== false) {
       $pose = $resume;
+    }
 
     // Return early if the key is requested
-    if ($key)
+    if ($key) {
       return $pose;
+    }
 
     return $this->poses[$pose];
   }
@@ -70,14 +72,17 @@ class navigator extends maintain_tagging {
   }
 
   public function find_pack($identifier): string {
-    if ($identifier !== '') {
-      foreach ($this->packs as $key => $pack) {
-        if ($key === $identifier)
-          return $pack;
-        elseif ($pack === $identifier)
-          return $key;
+    foreach ($this->packs as $key => $pack) {
+      if ($key === $identifier) {
+        return $pack;
+      }
+
+      if ($pack === $identifier) {
+        return $key;
       }
     }
+
+    return '';
   }
 
   /**

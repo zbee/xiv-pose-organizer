@@ -3,9 +3,11 @@
 class save_pose extends navigator {
 
   private function find_pose(string $key): pose {
-    for ($i = 0; $i < count($this->poses); $i++)
-      if ($this->poses[$i]->key == $key)
+    for ($i = 0, $iMax = count($this->poses); $i < $iMax; $i++) {
+      if ($this->poses[$i]->key == $key) {
         return $this->poses[$i];
+      }
+    }
   }
 
   private function save_tracked(array $tracked_data): void {
@@ -27,8 +29,13 @@ class save_pose extends navigator {
   private function write_pose(pose $pose): void {
     // Create the working directory if it doesn't exist.
     $destination = $this->poses_folder . '\\..working\\';
-    if (!file_exists($destination))
-      mkdir($destination);
+    if (
+      !file_exists($destination) &&
+      !mkdir($destination) &&
+      !is_dir($destination)
+    ) {
+      throw new RuntimeException('Working directory was not created');
+    }
 
     // Grab the linked file extensions
     if ($pose->has_preview) {
@@ -47,8 +54,9 @@ class save_pose extends navigator {
     $folder_pose_name = $pose->name;
     if ($pose->pack) {
       $folder_pose_name = $this->find_pack($pose->pack_name);
-      if (!$this->file_and_folder_separate_tagging)
+      if (!$this->file_and_folder_separate_tagging) {
         $folder_pose_name .= ';' . $pose->name;
+      }
     }
 
     // Categories
@@ -58,9 +66,11 @@ class save_pose extends navigator {
 
     // Tags
     $tags = '';
-    if (!$this->file_and_folder_separate_tagging)
-      foreach ($pose->tags as $tag)
+    if (!$this->file_and_folder_separate_tagging) {
+      foreach ($pose->tags as $tag) {
         $tags .= $tag . ' ';
+      }
+    }
 
     // Author
     $author = $this->author_format;
@@ -68,8 +78,9 @@ class save_pose extends navigator {
 
     // Others posed
     $group = '';
-    if ($pose->other_people_posed > 0)
+    if ($pose->other_people_posed > 0) {
       $group = 'g(' . $pose->other_people_posed + 1 . ')';
+    }
 
     // Fill in folder name from format
     $folder = $this->folder_name_format;
@@ -91,19 +102,22 @@ class save_pose extends navigator {
     // Fill in categories
     $categories = ['', '', ''];
     // Fill in each category
-    foreach ($pose->categories as $index => $category)
+    foreach ($pose->categories as $index => $category) {
       if (
         !$this->file_and_folder_separate_tagging or
         !$this->use_nested_structure_for_poses
-      )
+      ) {
         $categories[$index] = $category . ' ';
-      else
-        $categories[$index] = substr($category, 0, 1);
+      }
+      else {
+        $categories[$index] = $category[0];
+      }
+    }
 
     //Format categories
     $categories_text = $this->category_format;
     foreach ($categories as $index => $category) {
-      $index           += 1;
+      ++$index;
       $categories_text = str_replace(
         "%category_$index%",
         $category,
@@ -114,12 +128,13 @@ class save_pose extends navigator {
     // Fill in tags
     $tags = ['', '', ''];
     // Fill in each tag
-    foreach ($pose->tags as $index => $tag)
+    foreach ($pose->tags as $index => $tag) {
       $tags[$index] = $tag;
+    }
 
     // Format tags
     foreach ($tags as $index => $tag) {
-      $index     += 1;
+      ++$index;
       $file_name = str_replace(
         "%tag_$index%",
         $tag,
@@ -141,21 +156,24 @@ class save_pose extends navigator {
 
     // Pose name, pack name
     $file_pose_name = $pose->name;
-    if (!$this->use_nested_structure_for_poses and $pose->pack)
+    if (!$this->use_nested_structure_for_poses && $pose->pack) {
       $file_pose_name = $this->find_pack($pose->pack_name) . ';' . $pose->name;
+    }
 
     // Gender
     $gender = 'female';
-    if ($pose->gender == gender_male)
+    if ($pose->gender == gender_male) {
       $gender = 'male';
+    }
 
     // Others posed
     $sub = '';
     // Group, if structure is flat
     if (
-      $pose->other_people_posed > 0 and !$this->use_nested_structure_for_poses
-    )
+      $pose->other_people_posed > 0 && !$this->use_nested_structure_for_poses
+    ) {
       $sub .= 'g(' . $pose->other_people_posed + 1 . ') ';
+    }
     // Sub/Dom people required
     if ($pose->other_people_required > 0) {
       $pose->submission_to_other === true
@@ -189,25 +207,29 @@ class save_pose extends navigator {
         $this->normalize_poses and
         $this->keep_other_pose_formats and
         $pose->duplicate_pose !== null
-      )
+      ) {
         copy(
           $pose->duplicate_pose,
           $destination . $file_name . '.' . $duplicate_extension
         );
+      }
 
       // Copy auxiliary files
       // Link
-      if ($this->want_pose_link and $pose->link !== null)
+      if ($this->want_pose_link && $pose->link !== null) {
         $this->create_link($pose->link, $destination . $file_name);
+      }
       // Image
-      if ($this->want_pose_previews and $pose->has_preview) {
+      if ($this->want_pose_previews && $pose->has_preview) {
         // Support pose previews and uploaded previews
         $image = '\\' . $pose->image_name;
-        if (str_contains($image, 'assets\\tmp\\'))
+        if (str_contains($image, 'assets\\tmp\\')) {
           $image =
             str_replace('\\assets\\tmp\\', '..\\web\\assets\\tmp\\', $image);
-        else
+        }
+        else {
           $image = $this->poses_folder . '\\' . $image;
+        }
 
         copy(
           $image,
@@ -221,32 +243,43 @@ class save_pose extends navigator {
     else {
       // Copy Pose files
       // Pose
-      if (!file_exists($destination . $folder))
-        mkdir($destination . $folder);
+      if (
+        !file_exists($destination . $folder) &&
+        !mkdir($concurrentDirectory = $destination . $folder) &&
+        !is_dir($concurrentDirectory)
+      ) {
+        throw new RuntimeException(
+          sprintf('Pose directory "%s" was not created', $concurrentDirectory)
+        );
+      }
       copy($pose->path, $destination . $folder . $file_name . $file_extension);
       // Duplicated pose
       if (
         $this->normalize_poses and
         $this->keep_other_pose_formats and
         $pose->duplicate_pose !== null
-      )
+      ) {
         copy(
           $pose->duplicate_pose,
           $destination . $folder . $file_name . '.' . $duplicate_extension
         );
+      }
 
       // Copy auxiliary files
       // Link
-      if ($this->want_pose_link and $pose->link !== null)
+      if ($this->want_pose_link && $pose->link !== null) {
         $this->create_link($pose->link, $destination . $folder . 'link');
+      }
       // Image
-      if ($this->want_pose_previews and $pose->has_preview) {
+      if ($this->want_pose_previews && $pose->has_preview) {
         // Support pose previews and uploaded previews
         $image = '\\' . $pose->image_name;
-        if (str_contains($image, '\\assets\\tmp\\'))
+        if (str_contains($image, '\\assets\\tmp\\')) {
           $image = str_replace('\\..', '..\\web', $image);
-        else
+        }
+        else {
           $image = $this->poses_folder . '\\' . $image;
+        }
 
 
         copy(
@@ -258,10 +291,14 @@ class save_pose extends navigator {
     //endregion Foldered files
   }
 
+  /**
+   * @throws Exception
+   */
   public function save(array $post_data) {
     //region Tracked data
-    if (!isset($post_data['pack_names']))
+    if (!isset($post_data['pack_names'])) {
       $post_data['pack_names'] = [];
+    }
     // Save tracked data (tags, cats, verbs, packs)
     $this->save_tracked(
       [

@@ -1,5 +1,8 @@
 <?php
-/** @var pose_organizer $poser */
+/**
+ * @var pose_organizer $poser
+ * @noinspection PhpRedundantVariableDocTypeInspection
+ */
 $pose = $poser->current_pose();
 
 // Try to stop the current_pose from jumping around
@@ -20,13 +23,15 @@ if ($pose->has_preview) {
   $extension = $extension[count($extension) - 1];
   $image     = "assets\\tmp\\$poser->work_through_pose_step.$extension";
 
-  if (!str_contains($pose->image_name, 'tmp'))
+  if (!str_contains($pose->image_name, 'tmp')) {
     copy($poser->poses_folder . $pose->image_name, $image);
+  }
 }
 
 // Hide pack-dependent elements
-if (!$pose->pack)
+if (!$pose->pack) {
   echo '<style>.pack-dependent{display:none}</style>';
+}
 
 // Pass on variably required fields
 $script = '<script>required_data = {';
@@ -305,8 +310,8 @@ echo $script . '}</script>';
                   data-column="<?= $index ?>" class="tags" multiple>
             <?php foreach ($tags as $tag): ?>
               <option value="<?= $tag ?>"
-                <?= ($pose->categories != null and in_array($tag, $pose->tags))
-                  ? 'selected' : '' ?>
+                <?= ($pose->categories !== null &&
+                  in_array($tag, $pose->tags, true)) ? 'selected' : '' ?>
               ><?= $tag ?></option>
             <?php endforeach; ?>
           </select>
@@ -341,7 +346,7 @@ echo $script . '}</script>';
         <select name="verbs" id="verbs" tabindex="360" multiple>
           <?php foreach ($poser->verbs as $verb): ?>
             <option value="<?= $verb ?>"
-              <?= ($pose->verb != null and $verb == $pose->verb) ? 'selected'
+              <?= ($pose->verb !== null && $verb === $pose->verb) ? 'selected'
                 : '' ?>
             ><?= $verb ?></option>
           <?php endforeach; ?>

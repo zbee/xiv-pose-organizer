@@ -1,4 +1,6 @@
 <?php
+/** @noinspection SpellCheckingInspection */
+/** @noinspection PhpUnused */
 
 const steps                 = [
   'configure',

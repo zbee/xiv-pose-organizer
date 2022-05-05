@@ -27,8 +27,9 @@ class pose_folder_parser extends settings {
   public function parse_folder(bool $reparse = false): void {
     parent::__construct();
 
-    if (!is_dir($this->poses_folder))
+    if (!is_dir($this->poses_folder)) {
       throw new Exception('Configured poses folder could not be found.');
+    }
 
     $this->folders = new DirectoryIterator($this->poses_folder);
 
@@ -38,12 +39,13 @@ class pose_folder_parser extends settings {
       $pose_data =
         json_decode(file_get_contents($this->dots . 'data/poses.json'));
 
-      foreach ($pose_data->poses as $key => $pose)
+      foreach ($pose_data->poses as $key => $pose) {
         $pose_data->poses[$key] = new pose($pose);
+      }
 
       $this->poses_checksum = $pose_data->checksum;
       $this->poses          = $pose_data->poses;
-      usort($this->poses, fn($a, $b) => strcmp($a->path, $b->path));
+      usort($this->poses, static fn($a, $b) => strcmp($a->path, $b->path));
 
       $check_checksum = $this->poses_checksum(true);
     }
@@ -72,10 +74,12 @@ class pose_folder_parser extends settings {
   private function normalize_pose_name($name): string {
     // Swap underscores and hyphens that are in place of spaces with
     //  actual spaces
-    if (substr_count($name, '_') > 0 and substr_count($name, ' ') == 0)
+    if (substr_count($name, '_') > 0 && substr_count($name, ' ') === 0) {
       $name = str_replace('_', ' ', $name);
-    if (substr_count($name, '-') > 0 and substr_count($name, ' ') == 0)
+    }
+    if (substr_count($name, '-') > 0 && substr_count($name, ' ') === 0) {
       $name = str_replace('-', ' ', $name);
+    }
 
     //Remove extra characters beyond expanded ascii
     return preg_replace('/[[:^print:]]/', '', $name);
@@ -90,8 +94,9 @@ class pose_folder_parser extends settings {
 
     // If we're not recurring into a folder, the target is the configured
     //    pose folder
-    if ($folder === false)
+    if ($folder === false) {
       $folder = $this->folders;
+    }
 
     // Keep track of the number of poses found
     $poses = 0;
@@ -99,13 +104,15 @@ class pose_folder_parser extends settings {
     // Loop through the discovered files and folders within the target
     foreach ($folder as $found) {
       // Ignore dots
-      if ($found->isDot())
+      if ($found->isDot()) {
         continue;
+      }
       // Recurse into folders
       if ($found->isDir()) {
         // Don't search the working directory
-        if ($folder->getFilename() == '..working')
+        if ($folder->getFilename() == '..working') {
           continue;
+        }
 
         $poses += $this->parse_contents(
           new DirectoryIterator(
@@ -115,148 +122,156 @@ class pose_folder_parser extends settings {
         continue;
       }
 
-      // If it's a file with an extension
-      if (str_contains($found->getFilename(), '.') and !$found->isDir()) {
-        $is_pose = false;
+      // If it's a file
+      $is_pose = false;
 
-        //region Determine file format, and if it is a pose
-        $file      = explode('.', $found->getFilename());
-        $extension = strtolower($file[count($file) - 1]);
-        unset($file[count($file) - 1]);
-        $file_name   = implode('.', $file);
-        $file_format = null;
-        if ($extension == 'pose') {
-          $file_format = 'ana';
-          $is_pose     = true;
-        }
-        if ($extension == 'cmp') {
-          $file_format = 'cmt';
-          $is_pose     = true;
-        }
+      //region Determine file format, and if it is a pose
+      $file      = explode('.', $found->getFilename());
+      $extension = strtolower($file[count($file) - 1]);
+      unset($file[count($file) - 1]);
+      $file_name   = implode('.', $file);
+      $file_format = null;
+      if ($extension == 'pose') {
+        $file_format = 'ana';
+        $is_pose     = true;
+      }
+      if ($extension == 'cmp') {
+        $file_format = 'cmt';
+        $is_pose     = true;
+      }
 
-        $low_file_name = strtolower($file_name);
-        $pose_name     = $this->normalize_pose_name($low_file_name);
-        //endregion Determine file format
+      $low_file_name = strtolower($file_name);
+      $pose_name     = $this->normalize_pose_name($low_file_name);
+      //endregion Determine file format
 
-        if (!$is_pose)
+      if (!$is_pose) {
+        continue;
+      }
+
+      //region Parsing a pose
+
+      //region Checking nearby for a preview image
+      $image_name  = null;
+      $nearby_file = new DirectoryIterator($found->getPath());
+      foreach ($nearby_file as $possible_preview) {
+        // Ignore dots
+        if ($possible_preview->isDot()) {
           continue;
+        }
+        if (
+          str_contains($possible_preview->getFilename(), '.') and
+          !$possible_preview->isDir()
+        ) {
+          //region Determine file extension and name
+          $extension = explode('.', $possible_preview->getFilename());
+          $extension = strtolower($extension[count($extension) - 1]);
 
-        //region Parsing a pose
+          $file_name     = $possible_preview->getFilename();
+          $file_name     = str_replace(".$extension", '', $file_name);
+          $low_file_name = strtolower($file_name);
+          //endregion Determine file extension and name
 
-        //region Checking nearby for a preview image
-        $image_name  = null;
-        $nearby_file = new DirectoryIterator($found->getPath());
-        foreach ($nearby_file as $possible_preview) {
-          // Ignore dots
-          if ($possible_preview->isDot())
-            continue;
-          if (
-            str_contains($possible_preview->getFilename(), '.') and
-            !$possible_preview->isDir()
-          ) {
-            //region Determine file extension and name
-            $extension = explode('.', $possible_preview->getFilename());
-            $extension = strtolower($extension[count($extension) - 1]);
-
-            $file_name     = $possible_preview->getFilename();
-            $file_name     = str_replace(".$extension", '', $file_name);
-            $low_file_name = strtolower($file_name);
-            //endregion Determine file extension and name
-
-            if ($extension == 'jpg' or $extension == 'png') {
-              $image_name = $possible_preview->getRealPath();
-              $image_name = str_replace($this->poses_folder, '', $image_name);
-              break;
-            }
+          if ($extension == 'jpg' or $extension == 'png') {
+            $image_name = $possible_preview->getRealPath();
+            $image_name = str_replace($this->poses_folder, '', $image_name);
+            break;
           }
         }
-        //endregion Checking nearby for a preview image
+      }
+      //endregion Checking nearby for a preview image
 
-        //region Determine race
-        $pose_race = null;
-        //Step through each race's list of aliases
-        foreach (races as $race) { // List of race constants
-          foreach (constant("race_$race") as $race_race) // List of race aliases
-            if (str_contains($pose_name, $race_race)) {
-              $pose_race = constant("race_$race")[0];
-              // Add an indicator of where the race was
-              $pose_name = str_replace($race_race, '*$@', $pose_name);
-              break;
-            }
-          if ($pose_race != null)
+      //region Determine race
+      $pose_race = null;
+      //Step through each race's list of aliases
+      foreach (races as $race) { // List of race constants
+        foreach (constant("race_$race") as $race_race) // List of race aliases
+        {
+          if (str_contains($pose_name, $race_race)) {
+            $pose_race = constant("race_$race")[0];
+            // Add an indicator of where the race was
+            $pose_name = str_replace($race_race, '*$@', $pose_name);
             break;
+          }
         }
-        //endregion Determine race
-
-        //region Check for gender
-        $gender = null;
-        // Check for commonly occurring m or f next to the race
         if ($pose_race != null) {
-          if (str_contains($pose_name, ' m '))
-            $pose_name = str_replace(' m ', 'male', $pose_name);
-          else if (str_contains($pose_name, '*$@m'))
-            $pose_name = str_replace('*$@m', 'male', $pose_name);
-          else if (str_contains($pose_name, ' f '))
-            $pose_name = str_replace(' f ', 'female', $pose_name);
-          else if (str_contains($pose_name, '*$@f'))
-            $pose_name = str_replace('*$@f', 'female', $pose_name);
+          break;
         }
-        // Check for also-common female or male specification
-        if (str_contains($pose_name, 'male')) {
-          $gender = gender_male;
-          if (str_contains($pose_name, 'female'))
-            $gender = gender_female;
+      }
+      //endregion Determine race
 
-          // Trim the gender from the file name
-          $pose_name = str_replace('female', '', $pose_name);
-          $pose_name = str_replace('male', '', $pose_name);
+      //region Check for gender
+      $gender = null;
+      // Check for commonly occurring m or f next to the race
+      if ($pose_race != null) {
+        if (str_contains($pose_name, ' m ')) {
+          $pose_name = str_replace(' m ', 'male', $pose_name);
         }
-        // Strip race indicator
-        $pose_name = str_replace('*$@', '', $pose_name);
-        //endregion Check for gender
-
-        //region Check for author
-        $author = null;
-        // If author name is bracketed, assume the name is within those brackets
-        if (str_contains($pose_name, '[')) {
-          $author = explode('[', $pose_name);
-          $author = explode(']', $author[count($author) - 1])[0];
-          // Remove the author name from the file name
-          $pose_name = str_replace("[$author]", '', $pose_name);
+        else if (str_contains($pose_name, '*$@m')) {
+          $pose_name = str_replace('*$@m', 'male', $pose_name);
         }
-        // If there is  ' by X' in the file name, assume author name follows it
-        else if (str_contains($pose_name, ' by ')) {
-          $author = explode(' by ', $pose_name)[1];
-          $author = explode(' ', $author)[0];
-          // Remove the author name and the identifier from the file name
-          $pose_name = str_replace(" by $author", '', $pose_name);
+        else if (str_contains($pose_name, ' f ')) {
+          $pose_name = str_replace(' f ', 'female', $pose_name);
         }
-        //endregion Check for author
-
-        // Clean up extra spaces from grabbing pose attributes
-        $pose_name = preg_replace('/\s+/', ' ', trim($pose_name));
-        //endregion Parsing a pose
-
-        //Hashing the parse file to generate a key to track it into the reworked
-        //    pose folder
-        $pose_data = file_get_contents($found->getRealPath());
-        $key       = md5($pose_data);
-
-        try {
-          $poses         += 1;
-          $this->poses[] = new pose(
-            name:        $pose_name,
-            key:         $key,
-            file_format: $file_format,
-            path:        $found->getRealPath(),
-            pack:        $poses > 2,
-            author:      $author,
-            image_name:  $image_name,
-            race:        $pose_race,
-            gender:      $gender,
-          );
-        } catch (Exception) {
+        else if (str_contains($pose_name, '*$@f')) {
+          $pose_name = str_replace('*$@f', 'female', $pose_name);
         }
+      }
+      // Check for also-common female or male specification
+      if (str_contains($pose_name, 'male')) {
+        $gender = gender_male;
+        if (str_contains($pose_name, 'female')) {
+          $gender = gender_female;
+        }
+
+        // Trim the gender from the file name
+        $pose_name = str_replace('female', '', $pose_name);
+        $pose_name = str_replace('male', '', $pose_name);
+      }
+      // Strip race indicator
+      $pose_name = str_replace('*$@', '', $pose_name);
+      //endregion Check for gender
+
+      //region Check for author
+      $author = null;
+      // If author name is bracketed, assume the name is within those brackets
+      if (str_contains($pose_name, '[')) {
+        $author = explode('[', $pose_name);
+        $author = explode(']', $author[count($author) - 1])[0];
+        // Remove the author name from the file name
+        $pose_name = str_replace("[$author]", '', $pose_name);
+      }
+      // If there is  ' by X' in the file name, assume author name follows it
+      else if (str_contains($pose_name, ' by ')) {
+        $author = explode(' by ', $pose_name)[1];
+        $author = explode(' ', $author)[0];
+        // Remove the author name and the identifier from the file name
+        $pose_name = str_replace(" by $author", '', $pose_name);
+      }
+      //endregion Check for author
+
+      // Clean up extra spaces from grabbing pose attributes
+      $pose_name = preg_replace('/\s+/', ' ', trim($pose_name));
+      //endregion Parsing a pose
+
+      //Hashing the parse file to generate a key to track it into the reworked
+      //    pose folder
+      $pose_data = file_get_contents($found->getRealPath());
+      $key       = md5($pose_data);
+
+      try {
+        ++$poses;
+        $this->poses[] = new pose(
+          name:        $pose_name,
+          key:         $key,
+          file_format: $file_format,
+          path:        $found->getRealPath(),
+          pack:        $poses > 2,
+          author:      $author,
+          image_name:  $image_name,
+          race:        $pose_race,
+          gender:      $gender,
+        );
+      } catch (Exception) {
       }
     }
 
@@ -290,20 +305,24 @@ class pose_folder_parser extends settings {
 
     // Determine the format of the extension
     $file_format = 'ana';
-    if ($extension == 'cmp')
+    if ($extension == 'cmp') {
       $file_format = 'cmt';
+    }
 
     // Determine the file extension for the other format
     $other_format = 'cmt';
-    if ($this->format_for_pose_normalization == 'cmt')
+    if ($this->format_for_pose_normalization == 'cmt') {
       $other_format = 'ana';
+    }
     $other_extension = constant('file_extension_' . $other_format);
 
     // Determine if this file or the other is the duplicate (based on config)
-    if ($file_format == $this->format_for_pose_normalization)
+    if ($file_format == $this->format_for_pose_normalization) {
       $which_duplicate = other_file;
-    else
+    }
+    else {
       $which_duplicate = this_file;
+    }
 
     // Determine the two file paths we will be looking for
     if ($which_duplicate == other_file) {
@@ -318,11 +337,13 @@ class pose_folder_parser extends settings {
     // Find the two pose structs in the list
     foreach ($this->poses as $key => $pose) {
       // Save the duplicate path if this pose is the one we want to keep
-      if ($pose->path == $good_path)
+      if ($pose->path == $good_path) {
         $this->poses[$key]->duplicate_pose = $duplicate_path;
+      }
       // Unlink the duplicate pose
-      if ($pose->path == $duplicate_path)
+      if ($pose->path == $duplicate_path) {
         unset($this->poses[$key]);
+      }
     }
   }
 
@@ -341,14 +362,16 @@ class pose_folder_parser extends settings {
       $pose_name = implode('.', $pose_name);
 
       // If the name already exists, have it pruned
-      if (isset($pose_names[$pose_name]))
+      if (isset($pose_names[$pose_name])) {
         $this->prune_duplicate_poses_from_work($pose_name, $pose->path);
+      }
       // Save the file names without extension to list
-      else
+      else {
         $pose_names[$pose_name] = 0;
+      }
     }
 
-    usort($this->poses, fn($a, $b) => strcmp($a->path, $b->path));
+    usort($this->poses, static fn($a, $b) => strcmp($a->path, $b->path));
 
     file_put_contents(
       '../data/poses.json',
@@ -378,8 +401,9 @@ class pose_folder_parser extends settings {
     $check       = '';
     if (!$manual_check) {
       $first_level = true;
-      foreach ($this->poses as $pose)
+      foreach ($this->poses as $pose) {
         $check .= substr($pose->name, 0, 3);
+      }
     }
     else {
       // Use the same folder search, recursion, and pose naming as
@@ -389,12 +413,14 @@ class pose_folder_parser extends settings {
         $folder      = $this->folders;
       }
       foreach ($folder as $found) {
-        if ($found->isDot())
+        if ($found->isDot()) {
           continue;
+        }
         if ($found->isDir()) {
           // Don't search the working directory
-          if ($folder->getFilename() == '..working')
+          if ($folder->getFilename() == '..working') {
             continue;
+          }
           $check .= $this->poses_checksum(
             true,
             new DirectoryIterator(
@@ -403,70 +429,81 @@ class pose_folder_parser extends settings {
           );
           continue;
         }
-        if (str_contains($found->getFilename(), '.') and !$found->isDir()) {
-          $is_pose   = false;
-          $file      = explode('.', $found->getFilename());
-          $extension = strtolower($file[count($file) - 1]);
-          unset($file[count($file) - 1]);
-          $file_name = implode('.', $file);
-          if ($extension == file_extension_ana)
-            $is_pose = true;
-          if ($extension == file_extension_cmt)
-            $is_pose = true;
-          $low_file_name = strtolower($file_name);
-          $pose_name     = $this->normalize_pose_name($low_file_name);
 
-          if (!$is_pose)
-            continue;
+        $is_pose   = false;
+        $file      = explode('.', $found->getFilename());
+        $extension = strtolower($file[count($file) - 1]);
+        unset($file[count($file) - 1]);
+        $file_name = implode('.', $file);
+        if ($extension == file_extension_ana) {
+          $is_pose = true;
+        }
+        if ($extension == file_extension_cmt) {
+          $is_pose = true;
+        }
+        $low_file_name = strtolower($file_name);
+        $pose_name     = $this->normalize_pose_name($low_file_name);
 
-          $pose_race = null;
-          foreach (races as $race) {
-            foreach (constant("race_$race") as $race_race)
-              if (str_contains($pose_name, $race_race)) {
-                $pose_name = str_replace($race_race, '*$@', $pose_name);
-                $pose_race = true;
-                break;
-              }
-            if ($pose_race != null)
+        if (!$is_pose) {
+          continue;
+        }
+
+        $pose_race = null;
+        foreach (races as $race) {
+          foreach (constant("race_$race") as $race_race) {
+            if (str_contains($pose_name, $race_race)) {
+              $pose_name = str_replace($race_race, '*$@', $pose_name);
+              $pose_race = true;
               break;
+            }
           }
           if ($pose_race != null) {
-            if (str_contains($pose_name, ' m '))
-              $pose_name = str_replace(' m ', 'male', $pose_name);
-            else if (str_contains($pose_name, '*$@m'))
-              $pose_name = str_replace('*$@m', 'male', $pose_name);
-            else if (str_contains($pose_name, ' f '))
-              $pose_name = str_replace(' f ', 'female', $pose_name);
-            else if (str_contains($pose_name, '*$@f'))
-              $pose_name = str_replace('*$@f', 'female', $pose_name);
+            break;
           }
-          if (str_contains($pose_name, 'male')) {
-            if (str_contains($pose_name, 'female'))
-              $pose_name = str_replace('female', '', $pose_name);
-            else
-              $pose_name = str_replace('male', '', $pose_name);
-          }
-          $pose_name = str_replace('*$@', '', $pose_name);
-
-          if (str_contains($pose_name, '[')) {
-            $author    = explode('[', $pose_name);
-            $author    = explode(']', $author[count($author) - 1])[0];
-            $pose_name = str_replace("[$author]", '', $pose_name);
-          }
-          else if (str_contains($pose_name, ' by ')) {
-            $author    = explode(' by ', $pose_name)[1];
-            $author    = explode(' ', $author)[0];
-            $pose_name = str_replace(" by $author", '', $pose_name);
-          }
-          unset($author);
-          $pose_name = preg_replace('/\s+/', ' ', trim($pose_name));
-          $check     .= substr($pose_name, 0, 3);
         }
+        if ($pose_race != null) {
+          if (str_contains($pose_name, ' m ')) {
+            $pose_name = str_replace(' m ', 'male', $pose_name);
+          }
+          else if (str_contains($pose_name, '*$@m')) {
+            $pose_name = str_replace('*$@m', 'male', $pose_name);
+          }
+          else if (str_contains($pose_name, ' f ')) {
+            $pose_name = str_replace(' f ', 'female', $pose_name);
+          }
+          else if (str_contains($pose_name, '*$@f')) {
+            $pose_name = str_replace('*$@f', 'female', $pose_name);
+          }
+        }
+        if (str_contains($pose_name, 'male')) {
+          if (str_contains($pose_name, 'female')) {
+            $pose_name = str_replace('female', '', $pose_name);
+          }
+          else {
+            $pose_name = str_replace('male', '', $pose_name);
+          }
+        }
+        $pose_name = str_replace('*$@', '', $pose_name);
+
+        if (str_contains($pose_name, '[')) {
+          $author    = explode('[', $pose_name);
+          $author    = explode(']', $author[count($author) - 1])[0];
+          $pose_name = str_replace("[$author]", '', $pose_name);
+        }
+        else if (str_contains($pose_name, ' by ')) {
+          $author    = explode(' by ', $pose_name)[1];
+          $author    = explode(' ', $author)[0];
+          $pose_name = str_replace(" by $author", '', $pose_name);
+        }
+        unset($author);
+        $pose_name = preg_replace('/\s+/', ' ', trim($pose_name));
+        $check     .= substr($pose_name, 0, 3);
       }
     }
 
-    if ($first_level)
+    if ($first_level) {
       $check = dechex(crc32($this->poses_folder . $check));
+    }
     return $check;
   }
 }

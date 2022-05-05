@@ -23,15 +23,7 @@ if (isset($_GET['find_incomplete'])) {
   );
 }
 
-if (isset($_GET['work_through'])) {
-  //Setup the file to hold the step in the work_through process
-  file_put_contents('../data/resume.json', $_GET['resume'] ?? 0);
-  $poser->parse_folder();
-
-  require 'templates/work_through.php';
-}
-
-if (isset($_POST['work_through']) and isset($_POST['resume'])) {
+if (isset($_POST['work_through'], $_POST['resume'])) {
   //Update the step in the work_through process
   $poser->work_through_pose_step = (int)$_POST['resume'];
   file_put_contents('../data/resume.json', (int)$_POST['resume']);
@@ -40,9 +32,32 @@ if (isset($_POST['work_through']) and isset($_POST['resume'])) {
     unset($_POST['work_through']);
     unset($_POST['resume']);
 
-    $poser->save($_POST);
+    try {
+      $poser->save($_POST);
+    } catch (Exception $e) {
+      exit(
+        '<div id="loading">Failed to Parse</div>' .
+        '<script>body.find("#loading").show();</script>'
+      );
+    }
   }
-  else
+  else {
     $poser->skip($_POST['key']);
+  }
+}
+
+else if (isset($_GET['work_through'])) {
+  //Setup the file to hold the step in the work_through process
+  file_put_contents('../data/resume.json', $_GET['resume'] ?? 0);
+  try {
+    $poser->parse_folder();
+    require 'templates/work_through.php';
+  } catch (Exception $e) {
+    exit(
+      '<div id="loading">Failed to Parse</div>' .
+      '<script>body.find("#loading").show();</script>'
+    );
+  }
+
 }
 //endregion Handle work_through steps, with a pose number

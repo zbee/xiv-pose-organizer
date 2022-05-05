@@ -13,7 +13,7 @@ $ext = strtolower(pathinfo($img, PATHINFO_EXTENSION));
 $final_image = $poser->work_through_pose_step . '.' . $ext;
 // check's valid format
 if (in_array($ext, $valid_extensions)) {
-  $path = $path . strtolower($final_image);
+  $path .= strtolower($final_image);
   $time = time();
   $move = move_uploaded_file($tmp, $path);
   $path = str_replace('..\\', '', $path);

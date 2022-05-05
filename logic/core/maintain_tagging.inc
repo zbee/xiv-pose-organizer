@@ -120,7 +120,8 @@ class maintain_tagging extends pose_folder_parser {
    * @return void
    */
   private function set_verb_file(): void {
-    if (!file_exists('../data/verbs.json'))
+    if (!file_exists('../data/verbs.json')) {
       file_put_contents('../data/verbs.json', json_encode([]));
+    }
   }
 }

@@ -2,8 +2,10 @@
 require '../../logic/autoload.php';
 $poser = new pose_organizer('../../');
 
-foreach ($poser->poses as $pose)
+foreach ($poser->poses as $pose) {
   if (
-    $pose->author != null and str_starts_with($pose->author, $_POST['author'])
-  )
+    $pose->author !== null && str_starts_with($pose->author, $_POST['author'])
+  ) {
     exit($pose->author);
+  }
+}

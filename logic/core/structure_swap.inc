@@ -29,10 +29,12 @@ class structure_swap extends save_pose {
 
   public function swap(): void {
     // Determine the new structure
-    if ($this->use_nested_structure_for_poses == 'true')
+    if ($this->use_nested_structure_for_poses === 'true') {
       $this->new_structure = flat_structure;
-    else
+    }
+    else {
       $this->new_structure = nested_structure;
+    }
     $this->old_structure =
       $this->new_structure == flat_structure ? nested_structure
         : flat_structure;
@@ -47,13 +49,14 @@ class structure_swap extends save_pose {
         $file_folder->isDir() and
         !$file_folder->isDot() and
         $this->old_structure == nested_structure
-      )
+      ) {
         $this->folders[] = new DirectoryIterator(
           $file_folder->getPath() . '\\' . $file_folder->getFilename()
         );
+      }
 
       // Read files if going to a nested structure
-      if ($file_folder->isFile() and $this->old_structure == flat_structure) {
+      if ($file_folder->isFile() && $this->old_structure == flat_structure) {
         // Get file name
         $file_name = $file_folder->getFilename();
         $file_name = explode('.', $file_name);
@@ -61,8 +64,9 @@ class structure_swap extends save_pose {
         $file_name = implode('.', $file_name);
 
         // Set up file holder
-        if (!isset($this->files[$file_name]))
+        if (!isset($this->files[$file_name])) {
           $this->files[$file_name] = [];
+        }
 
         $this->files[$file_name][] =
           $file_folder->getPath() . '\\' . $file_folder;
