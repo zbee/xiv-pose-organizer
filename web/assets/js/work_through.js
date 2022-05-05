@@ -252,7 +252,7 @@ function pack_name_extra_load(element) {
             $(this).prop('selected', false);
         });
       });
-      element.parent().find('input').val('test').focus();
+      element.parent().find('input').focus();
     })
 }
 
