@@ -60,15 +60,14 @@ and visit localhost:80 on your computer and run through
 the program (something would be clunky since /web is the
 root, not the actual folder).
 
-A less user-friendly way to run this that is known to work would be to open
-[PHPStorm from JetBrains](https://www.jetbrains.com/phpstorm/)
-using my 
-[PHP Installation](https://windows.php.net/download#php-8.1)
-(VS16 x64 Non Thread Safe > Zip) and then run it as a
-"PHP Built-in Web Server" > on "localhost" port "80" >
-with the document root set as
-(projects)"\xiv-pose-organizer\web" then just open up
-localhost:80.
+A less user-friendly, but similar, way to run this that is known to work
+would be to open
+[PHPStorm](https://www.jetbrains.com/phpstorm/)
+with the interpreter
+[PHP 8.1.4](https://windows.php.net/download#php-8.1),
+and then run it as a "PHP Built-in Web Server" > on "localhost" port "80" >
+with the document root set as (projects)"\xiv-pose-organizer\web" then
+open up localhost:80.
 
 Once you confirm your settings and begin working through
 your poses you can download and remove poses in between
@@ -98,12 +97,10 @@ Read the included [`use-case.md`](use-case.md) file for
 information on the goal of the code.
 
 [`architecture.md`](architecture.md) is a brief plan from
-before the project was written, this is kept primarily
-because the project overall was used to help teach the
-flow of a project to someone - but you can reference it
-and it was generally followed.
+before the project was written - once this reaches a point where it
+has all of the planned features this will adjust.
 
-Check the [To-Do](todo.md) for planned changes.
+Check the [To-Do](todo.md) for planned changes and unimplemented features.
 
 ---
 
@@ -208,4 +205,4 @@ contents replace it.
 
 See the [LICENSE](LICENSE) file.
 
-Includes jQuery 3.6.0, a GPL-compatible licensed library.
+Includes jQuery 3.6.0 and Nord 0.2.0 palettes.
