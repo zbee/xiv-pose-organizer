@@ -205,13 +205,13 @@ body.on('input', '#other_people_posed', function () {
 })
 
 // Enforce category selections when a pose pack is selected
-body.on('focusout', '#pack_names', function () {
+function pack_name_extra_load(element) {
   body.find('#loading').show();
   $.ajax(
     {
       url: '/handle/work_through_pack_dependent_data.php',
       type: 'POST',
-      data: {'key': $(this).val()[0]},
+      data: {'key': element.val()[0]},
       async: false,
     }
   ).done(
@@ -253,6 +253,15 @@ body.on('focusout', '#pack_names', function () {
         });
       });
     })
+};
+
+body.on('click', '#pack_names', function () {
+  pack_name_extra_load($(this));
+});
+body.on('keydown', '#pack_names', function (e) {
+  if (e.keyCode == 9 || e.keyCode == 16) {
+    pack_name_extra_load($(this));
+  }
 });
 
 // Add additional categories or tags column
