@@ -4,14 +4,14 @@ $poser = new pose_organizer();
 
 //region Handle a pose folder on the step of configuring settings
 if (
-  isset($_GET['configure']) or
-  isset($_GET['configure_tags']) or
+  isset($_GET['configure']) ||
+  isset($_GET['configure_tags']) ||
   isset($_GET['configure_review'])
 ) {
   require 'templates/configure.php';
 }
 
-if (isset($_POST['configure']) or isset($_POST['configure_tags'])) {
+if (isset($_POST['configure']) || isset($_POST['configure_tags'])) {
   require 'handle/configure.php';
 }
 //endregion Handle a pose folder on the step of configuring settings

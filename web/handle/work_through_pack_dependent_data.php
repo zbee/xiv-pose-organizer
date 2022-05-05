@@ -1,6 +1,6 @@
 <?php
 require '../../logic/autoload.php';
-$poser = new pose_organizer('../../');
+$poser = new pose_organizer('../../', prevent_checksum: true);
 
 if (isset($_POST['key'])) {
   foreach ($poser->poses as $pose) {

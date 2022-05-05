@@ -24,7 +24,10 @@ class pose_folder_parser extends settings {
    *
    * @throws Exception
    */
-  public function parse_folder(bool $reparse = false): void {
+  public function parse_folder(
+    bool $reparse = false,
+    bool $prevent_checksum = false
+  ): void {
     parent::__construct();
 
     if (!is_dir($this->poses_folder)) {
@@ -47,15 +50,16 @@ class pose_folder_parser extends settings {
       $this->poses          = $pose_data->poses;
       usort($this->poses, static fn($a, $b) => strcmp($a->path, $b->path));
 
-      $check_checksum = $this->poses_checksum(true);
+      if (!$prevent_checksum)
+        $check_checksum = $this->poses_checksum(true);
     }
 
     // Reparse the poses folder if it has not yet been, if reparse is specified,
     //    or if the checksum has changed
     if (
-      !file_exists($this->dots . 'data/poses.json') or
-      $reparse or
-      $check_checksum != $this->poses_checksum
+      !file_exists($this->dots . 'data/poses.json') ||
+      $reparse ||
+      (!$prevent_checksum && $check_checksum != $this->poses_checksum)
     ) {
       $this->poses = [];
       $this->parse_contents();
