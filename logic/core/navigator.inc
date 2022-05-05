@@ -60,7 +60,7 @@ class navigator extends maintain_tagging {
   /**
    * @return string[] the list of packs that have been used before
    */
-  public function get_packs(): array{
+  public function get_packs(): array {
     if (!file_exists('../data/packs.json')) {
       file_put_contents('../data/packs.json', json_encode([]));
       $this->packs = [];
@@ -68,7 +68,7 @@ class navigator extends maintain_tagging {
     else {
       $this->packs = json_decode(file_get_contents('../data/packs.json'), true);
     }
-    return $this->packs;
+    return array_reverse($this->packs);
   }
 
   public function find_pack($identifier): string {

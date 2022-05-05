@@ -4,3 +4,4 @@ data/*
 web/assets/tmp/*
 *.xml
 *.iml
+*.log
