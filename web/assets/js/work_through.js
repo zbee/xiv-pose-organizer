@@ -253,7 +253,7 @@ function pack_name_extra_load(element) {
         });
       });
     })
-};
+}
 
 body.on('click', '#pack_names', function () {
   pack_name_extra_load($(this));

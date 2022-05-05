@@ -100,6 +100,18 @@ class pose_folder_parser extends settings {
 
     // Keep track of the number of poses found
     $poses = 0;
+    // If this is a recursive call, grab the number of poses
+    if ($folder !== false) {
+      $nearby_file = new DirectoryIterator($folder->getPath());
+      foreach ($nearby_file as $possible_pose) {
+        if (
+          str_ends_with($possible_pose->getFilename(), '.pose') &&
+          str_ends_with($possible_pose->getFilename(), '.cmp')
+        ) {
+          $poses++;
+        }
+      }
+    }
 
     // Loop through the discovered files and folders within the target
     foreach ($folder as $found) {
@@ -265,7 +277,7 @@ class pose_folder_parser extends settings {
           key:         $key,
           file_format: $file_format,
           path:        $found->getRealPath(),
-          pack:        $poses > 2,
+          pack:        $poses > 1,
           author:      $author,
           image_name:  $image_name,
           race:        $pose_race,
