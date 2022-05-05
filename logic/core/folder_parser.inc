@@ -105,7 +105,7 @@ class pose_folder_parser extends settings {
       $nearby_file = new DirectoryIterator($folder->getPath());
       foreach ($nearby_file as $possible_pose) {
         if (
-          str_ends_with($possible_pose->getFilename(), '.pose') &&
+          str_ends_with($possible_pose->getFilename(), '.pose') ||
           str_ends_with($possible_pose->getFilename(), '.cmp')
         ) {
           $poses++;
