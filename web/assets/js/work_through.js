@@ -212,7 +212,7 @@ function pack_name_extra_load(element) {
       url: '/handle/work_through_pack_dependent_data.php',
       type: 'POST',
       data: {'key': element.val()[0]},
-      async: false,
+      async: true,
     }
   ).done(
     function (response) {
@@ -252,6 +252,7 @@ function pack_name_extra_load(element) {
             $(this).prop('selected', false);
         });
       });
+      element.parent().find('input').val('test').focus();
     })
 }
 
