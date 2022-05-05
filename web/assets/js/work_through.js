@@ -192,13 +192,13 @@ body.on('keydown', '.add_category:focus', function (e) {
 
 // Keep others-required and others-posed in sync
 body.on('input', '#other_people_required', function () {
-  let posed = $(this).parent().find('input[name="other_people_posed"]')
+  let posed = $(this).parent().parent().find('input[name="other_people_posed"]')
   posed.attr('min', $(this).val());
   if (posed.val() < $(this).val())
     posed.val($(this).val());
 })
 body.on('input', '#other_people_posed', function () {
-  let posed = $(this).parent().find('input[name="other_people_required"]')
+  let posed = $(this).parent().parent().find('input[name="other_people_required"]')
   posed.attr('max', $(this).val());
   if (posed.val() > $(this).val())
     posed.val($(this).val());
