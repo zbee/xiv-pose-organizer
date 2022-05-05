@@ -332,11 +332,11 @@ echo $script . '}</script>';
         </div>
       <?php endfor; ?>
     </div>
-    <h3>Verb</h3>
+    <h3>Action</h3>
     <div class="column_holder">
       <div>
         <label for="verbs" style="display:none">
-          Choose verbs
+          Choose action
         </label>
         <select name="verbs" id="verbs" tabindex="360" multiple>
           <?php foreach ($poser->verbs as $verb): ?>

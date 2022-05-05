@@ -103,6 +103,7 @@ class maintain_tagging extends pose_folder_parser {
       file_put_contents('../data/settings.json', json_encode($settings));
 
       // Save the verb list
+      sort($verbs);
       file_put_contents('../data/verbs.json', json_encode($verbs));
     }
 

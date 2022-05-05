@@ -1,7 +1,7 @@
 # xiv-pose-organizer
 
 > Windows 10, PHP 8.1, with compatibility for .pose and
-.cmp files.
+> .cmp files.
 
 A tool to help you go through and organize all of
 your FFXIV poses and make them searchable.
@@ -9,10 +9,11 @@ your FFXIV poses and make them searchable.
 ## Software Preview
 ![Preview of the Work Through process of the software](preview.png)
 ## Output Preview
+
 ![Preview of the output of the work through process](output_preview.png)
 
-(there are 2 output modes: flat and folders - folders for cleaner storage and more structured searching, flat for simpler searching)
-
+(there are 2 output modes; folders for cleaner storage and more structured
+searching, flat for simpler searching)
 
 # What is this
 
@@ -21,29 +22,36 @@ them, have extra resources for them (like preview images
 and links to the website of the pose), and ultimately
 just make them searchable in Anamnesis/CMT.
 
-You run the software, open it in your browser, configure
-the software, then you can work through each of your poses.
+You run the software, open it in your browser, and begin configuring it.
+
+It can be configured such that it requests you do as little as
+possible, just naming the poses and the authors, and choosing
+tags and categories - or for much more work that could be done
+little by little over time to also include previews images for
+every pose, link to where the pose was downloaded from, how
+many people are required for the pose to work and how many
+people are posed in a pack of pose files, and so on.
+
+After configuration it tries to parse as much information as it can from the
+folder
+and file names the poses already exist in, to reduce your workload.
 
 Clarifying or completing the names of the poses, including
 the name of the author, adding the link to where you got
 the pose, adding a preview image of the pose, and tagging
 and categorizing the pose.
 
-All of this data for all of your poses will then be parsed
-out in a standard manner across all of your poses, including
+All of this data for all of your poses will then be outputted
+in a standard manner across all of your poses, including
 the organization of the files themselves, and the poses will
 then be better searchable in Anamnesis/CMT by the correct
-pose names, the author, or the categories and tags you chooose.
+pose names, the author, or the categories and tags you choose.
 
 For more, see the [`use-case.md`](use-case.md) file.
 
 # How to use this
 
-This is a project primarily made for myself and my friend
-to make a shared folder in Google Drive with all our poses,
-so it's not very well set up for others to use honestly.
-
-But, the basic idea is that you could throw this in
+The basic idea of this is that you could throw this in
 [XAMPP](https://www.apachefriends.org/index.html)
 with a
 [PHP Installation](https://windows.php.net/download#php-8.1)
@@ -52,7 +60,7 @@ and visit localhost:80 on your computer and run through
 the program (something would be clunky since /web is the
 root, not the actual folder).
 
-I know it works via my workflow of course, which is to open
+A less user-friendly way to run this that is known to work would be to open
 [PHPStorm from JetBrains](https://www.jetbrains.com/phpstorm/)
 using my 
 [PHP Installation](https://windows.php.net/download#php-8.1)
@@ -73,23 +81,6 @@ along the left side of the screen to copy the data in the
 field. This is useful for copying the "Path to File" to
 open the folder of the pose and examine the other poses
 in a pack.
-
----
-
-It tries to parse as much information as it can from the folder
-and file names the poses already exist in, to reduce your workload.
-
-It can be configured such that it requests you do as little as
-possible, just naming the poses and the authors, and choosing
-tags and categories - or for much more work that could be done
-little by little over time to also include previews images for
-every pose, link to where the pose was downloaded from, how
-many people are required for the pose to work and how many
-people are posed in a pack of pose files, and so on.
-
-You can set it up to have many different categories and tags that
-each pose could be, or just the default of 2 category and 2 tag
-options.
 
 # How to code on this
 
