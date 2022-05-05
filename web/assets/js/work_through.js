@@ -259,7 +259,10 @@ body.on('click', '#pack_names', function () {
   pack_name_extra_load($(this));
 });
 body.on('keydown', '#pack_names', function (e) {
-  if (e.keyCode == 9 || e.keyCode == 16) {
+  if (
+    (e.keyCode == 9 || e.keyCode == 16) &&
+    $(this).find('option:selected').length > 0
+  ) {
     pack_name_extra_load($(this));
   }
 });
