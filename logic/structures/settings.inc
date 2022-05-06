@@ -112,12 +112,11 @@ class settings extends utilities {
    *                     %categories% are abbreviated categories that are
    *                     default shown on folder names
    *                     requires: separate_tagging_between_file_and_folder =
-   *                     true default: %categories% %tag_1% %tag_2% %tag_3%
-   *                     %verb%
-   *                              %sub% %race% %gender% %author% '%pose_name%'
+   *                     true default: %categories% (%tag_1% %tag_2% %tag_3%
+   *                     %verb%) %sub% %race%,%gender% %author% '%pose_name%'
    */
-  protected string $file_name_format = "%categories% %tag_1% %tag_2% %tag_3% " .
-  "%verb% %sub% %race% %gender% %author% '%pose_name%'";
+  protected string $file_name_format = "%categories% (%tag_1% %tag_2% %tag_3% " .
+  "%verb%) %sub% %race%,%gender% %author% '%pose_name%'";
 
   /**
    * @var string $category_format
@@ -149,8 +148,8 @@ class settings extends utilities {
     bool   $want_pose_previews = true,
     string $author_format = '[%author%]',
     string $category_format = '{%category_1%%category_2%%category_3%}',
-    string $file_name_format = "%categories% %tag_1% %tag_2% %tag_3% " .
-    "%verb% %sub% %race% %gender% %author% '%pose_name%'",
+    string $file_name_format = "%categories% (%tag_1% %tag_2% %tag_3% " .
+    "%verb%) %sub% %race%,%gender% %author% '%pose_name%'",
     string $folder_name_format = "%category_1% %category_2% %category_3% " .
     "%tags% %group% %author% '%pose_name%'",
   ) {
