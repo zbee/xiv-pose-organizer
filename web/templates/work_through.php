@@ -18,7 +18,7 @@ $path = implode("<wbr>\\", $path);
 
 // Format the pose image data
 $image = '';
-if ($pose->has_preview && is_file($pose->image_name)) {
+if ($pose->has_preview && is_file($poser->poses_folder . $pose->image_name)) {
   $extension = explode('.', $pose->image_name);
   $extension = $extension[count($extension) - 1];
   $image     = "assets\\tmp\\$poser->work_through_pose_step.$extension";
