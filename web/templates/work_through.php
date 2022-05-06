@@ -18,14 +18,20 @@ $path = implode("<wbr>\\", $path);
 
 // Format the pose image data
 $image = '';
-if ($pose->has_preview) {
+if ($pose->has_preview && is_file($pose->image_name)) {
   $extension = explode('.', $pose->image_name);
   $extension = $extension[count($extension) - 1];
   $image     = "assets\\tmp\\$poser->work_through_pose_step.$extension";
-
   if (!str_contains($pose->image_name, 'tmp')) {
     copy($poser->poses_folder . $pose->image_name, $image);
   }
+  else {
+    copy('..\\web\\' . $pose->image_name, $image);
+  }
+}
+else {
+  $pose->has_preview = false;
+  $pose->image_name  = null;
 }
 
 // Hide pack-dependent elements
