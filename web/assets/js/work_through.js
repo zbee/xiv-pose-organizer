@@ -447,6 +447,13 @@ function copy_pose(copy_type) {
         .prop('selected', true).parent().removeClass('error');
       pack_name_extra_load(pack_names);
 
+      // Unselect any selections
+      body.find('select').each(function () {
+        $(this).find('option').each(function () {
+          $(this).prop('selected', false);
+        });
+      });
+
       // Fill in the rest of the fields
       body.find('input[name="name"]')
         .val(response.name).removeClass('error');
