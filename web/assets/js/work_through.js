@@ -444,63 +444,65 @@ function copy_pose(copy_type) {
       // Handle pack selection
       var pack_names = body.find('select[name="pack_names"]');
       pack_names.find('option[value="' + response.pack_name + '"]')
-        .prop('selected', true);
+        .prop('selected', true).parent().removeClass('error');
       pack_name_extra_load(pack_names);
 
       // Fill in the rest of the fields
+      body.find('input[name="name"]')
+        .val(response.name).removeClass('error');
+
       response.submission_to_other = response.submission_to_other === null
-        ? '' : response.submission_to_other.toString();
+        ? '' : response.submission_to_other;
+      response.submission_to_other = response.submission_to_other === true
+        ? '1' : '0';
       body.find('select[name="submission_to_other"]')
         .find('option[value="' + response.submission_to_other + '"]')
-        .prop('selected', true);
+        .prop('selected', true).parent().removeClass('error');
+
+      body.find('input[name="other_people_posed"]')
+        .val(response.other_people_posed).removeClass('error');
+      body.find('input[name="other_people_required"]')
+        .val(response.other_people_required).removeClass('error');
 
       if (typeof response.categories[0] !== 'undefined') {
         body.find('select[name="categories0"]')
           .find('option[value="' + response.categories[0] + '"]')
-          .prop('selected', true);
+          .prop('selected', true).parent().removeClass('error');
       }
 
       if (typeof response.categories[1] !== 'undefined') {
         body.find('select[name="categories1"]')
           .find('option[value="' + response.categories[1] + '"]')
-          .prop('selected', true);
+          .prop('selected', true).parent().removeClass('error');
       }
 
       if (typeof response.categories[2] !== 'undefined') {
         body.find('select[name="categories2"]')
           .find('option[value="' + response.categories[2] + '"]')
-          .prop('selected', true);
+          .prop('selected', true).parent().removeClass('error');
       }
 
       if (typeof response.tags[0] !== 'undefined') {
         body.find('select[name="tags0"]')
           .find('option[value="' + response.tags[0] + '"]')
-          .prop('selected', true);
+          .prop('selected', true).parent().removeClass('error');
       }
 
       if (typeof response.tags[1] !== 'undefined') {
         body.find('select[name="tags1"]')
           .find('option[value="' + response.tags[1] + '"]')
-          .prop('selected', true);
+          .prop('selected', true).parent().removeClass('error');
       }
 
       if (typeof response.tags[2] !== 'undefined') {
         body.find('select[name="tags2"]')
           .find('option[value="' + response.tags[2] + '"]')
-          .prop('selected', true);
+          .prop('selected', true).parent().removeClass('error');
       }
 
       body.find('select[name="verbs"]')
         .find('option[value="' + response.verb + '"]')
-        .prop('selected', true);
-
-      body.find('input[name="name"]')
-        .val(response.name);
-
-      body.find('input[name="other_people_posed"]')
-        .val(response.other_people_posed);
-      body.find('input[name="other_people_required"]')
-        .val(response.other_people_required);
+        .prop('selected', true).parent().removeClass('error');
 
       body.find('#loading').hide();
     }
