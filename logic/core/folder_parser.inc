@@ -189,7 +189,7 @@ class pose_folder_parser extends settings {
           $low_file_name = strtolower($file_name);
           //endregion Determine file extension and name
 
-          if ($extension == 'jpg' or $extension == 'png') {
+          if ($extension == 'jpg' || $extension == 'png') {
             $image_name = $possible_preview->getRealPath();
             $image_name = str_replace($this->poses_folder, '', $image_name);
             break;
@@ -265,6 +265,9 @@ class pose_folder_parser extends settings {
     string $pose_name,
     string $path
   ): void {
+    $pose_name = strtolower($pose_name);
+    $path      = strtolower($path);
+
     // Remove the file extension from the path, and save it
     $root_path = explode('.', $path);
     $extension = $path[count($root_path) - 1];
@@ -277,19 +280,19 @@ class pose_folder_parser extends settings {
 
     // Determine the format of the extension
     $file_format = 'ana';
-    if ($extension == 'cmp') {
+    if ($extension === 'cmp') {
       $file_format = 'cmt';
     }
 
     // Determine the file extension for the other format
     $other_format = 'cmt';
-    if ($this->format_for_pose_normalization == 'cmt') {
+    if ($this->format_for_pose_normalization === 'cmt') {
       $other_format = 'ana';
     }
     $other_extension = constant('file_extension_' . $other_format);
 
     // Determine if this file or the other is the duplicate (based on config)
-    if ($file_format == $this->format_for_pose_normalization) {
+    if ($file_format === $this->format_for_pose_normalization) {
       $which_duplicate = other_file;
     }
     else {
@@ -297,7 +300,7 @@ class pose_folder_parser extends settings {
     }
 
     // Determine the two file paths we will be looking for
-    if ($which_duplicate == other_file) {
+    if ($which_duplicate === other_file) {
       $good_path      = $path;
       $duplicate_path = $root_path . '\\' . $pose_name . '.' . $other_extension;
     }
@@ -309,11 +312,11 @@ class pose_folder_parser extends settings {
     // Find the two pose structs in the list
     foreach ($this->poses as $key => $pose) {
       // Save the duplicate path if this pose is the one we want to keep
-      if ($pose->path == $good_path) {
+      if (strtolower($pose->path) === $good_path) {
         $this->poses[$key]->duplicate_pose = $duplicate_path;
       }
       // Unlink the duplicate pose
-      if ($pose->path == $duplicate_path) {
+      if (strtolower($pose->path) === $duplicate_path) {
         unset($this->poses[$key]);
       }
     }
