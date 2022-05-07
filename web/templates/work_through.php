@@ -393,9 +393,20 @@ echo $script . '}</script>';
          : $poser->work_through_pose_step - 1 ?>">
     &laquo;
   </nav>
+  <nav class="navigate" tabindex="3" onclick="copy_pose('first')"
+       data-copy="first"
+       title="Copy 1st pose-of-similar-name's fields">
+    &#128467;
+  </nav>
+  <nav class="navigate" tabindex="4" onclick="copy_pose('last')"
+       data-copy="last"
+       title="Copy last pose's fields">
+    &#128466;
+  </nav>
   <nav class="navigate" data-current="work_through"
        data-target="work_through" tabindex="2" onclick="navigate($(this))"
-       data-resume="<?= $poser->work_through_pose_step ?>" data-reset="">
+       data-resume="<?= $poser->work_through_pose_step ?>" data-reset=""
+       title="Reset this pose's data">
     &#11119;
   </nav>
   <nav class="navigate" data-current="work_through"

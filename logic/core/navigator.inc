@@ -71,7 +71,12 @@ class navigator extends maintain_tagging {
     return $this->packs;
   }
 
-  public function find_pack($identifier): string {
+  /**
+   * @param string $identifier key or name of pack to find
+   *
+   * @return string return key or name (opposite of input) of pack
+   */
+  public function find_pack(string $identifier): string {
     foreach ($this->packs as $key => $pack) {
       if ($key === $identifier) {
         return $pack;
@@ -91,5 +96,49 @@ class navigator extends maintain_tagging {
   public function set_packs(array $packs): void {
     file_put_contents('../data/packs.json', json_encode($packs));
     $this->packs = $packs;
+  }
+
+  /**
+   * @param string $copy_type whether to copy the last pose or the first pose
+   *                          that has a similar name
+   *
+   * @return pose
+   * @throws RuntimeException if invalid copy type is given
+   */
+  public function copy_pose_fields(string $copy_type): pose {
+    if ($copy_type !== copy_first && $copy_type !== copy_last) {
+      throw new RuntimeException('copy_pose_fields: invalid copy_type');
+    }
+
+    if ($copy_type === copy_first) {
+      // First look for a pose with the same file name, minus race and gender
+      $pose      = $this->current_pose();
+      $pose_path = explode('\\', $pose->path);
+      $pose_path = $pose_path[count($pose_path) - 1];
+      $pose_path = $this->extract_race_and_gender($pose_path)['name'];
+
+      foreach ($this->poses as $match) {
+        $match_path = explode('\\', $match->path);
+        $match_path = $match_path[count($match_path) - 1];
+        $match_path = $this->extract_race_and_gender($match_path)['name'];
+        if ($match_path === $pose_path) {
+          return $match;
+        }
+      }
+
+      // If a same-name pose wasn't found grab the first one from the same folder
+      foreach ($this->poses as $match) {
+        $match_path = explode('\\', $match->path);
+        unset($match_path[count($match_path) - 1]);
+        $match_path = implode('\\', $match_path);
+        if (str_starts_with($pose->path, $match_path)) {
+          return $match;
+        }
+      }
+
+      return new pose('empty');
+    }
+
+    return $this->poses[$this->current_pose(key: true) - 1];
   }
 }

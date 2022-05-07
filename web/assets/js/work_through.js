@@ -136,6 +136,11 @@ function navigate(nav) {  // Process navigation data
 
 body.on('keydown', '.navigate:focus', function (e) {
   if (e.keyCode == 13 || e.keyCode == 32) {
+    if (typeof $(this).attr('data-copy') !== 'undefined') {
+      copy_pose($(this).attr('data-copy'));
+      return;
+    }
+
     navigate($(this));
   }
 });
@@ -253,7 +258,7 @@ function pack_name_extra_load(element, keycode) {
         });
       });
 
-      if (e.keyCode == 9) {
+      if (keycode == 9) {
         element.parent().find('input').focus();
       } else {
         element.parent().parent().find('input[name="pack"]').focus();
@@ -409,3 +414,92 @@ body.on('keydown', '#author', function (e) {
     );
   }
 });
+
+// Offer previous-poses field copying
+function copy_pose(copy_type) {
+  body.find('#loading').show();
+  $.ajax(
+    {
+      url: '/handle/work_through_copy.php',
+      type: 'POST',
+      data: {'copy_type': copy_type},
+      async: true,
+    }
+  ).done(
+    function (response) {
+      if (response.length === 0) {
+        alert('No similar pose found');
+      }
+      response = JSON.parse(response);
+
+      // Ensure pack is selected
+      if (response.pack) {
+        body.find('#pack_yes').prop('checked', true);
+        body.find('#pack_no').prop('checked', false);
+      } else {
+        body.find('#pack_yes').prop('checked', false);
+        body.find('#pack_no').prop('checked', true);
+      }
+
+      // Handle pack selection
+      var pack_names = body.find('select[name="pack_names"]');
+      pack_names.find('option[value="' + response.pack_name + '"]')
+        .prop('selected', true);
+      pack_name_extra_load(pack_names);
+
+      // Fill in the rest of the fields
+      response.submission_to_other = response.submission_to_other === null
+        ? '' : response.submission_to_other.toString();
+      body.find('select[name="submission_to_other"]')
+        .find('option[value="' + response.submission_to_other + '"]')
+        .prop('selected', true);
+
+      if (typeof response.categories[0] !== 'undefined') {
+        body.find('select[name="categories0"]')
+          .find('option[value="' + response.categories[0] + '"]')
+          .prop('selected', true);
+      }
+
+      if (typeof response.categories[1] !== 'undefined') {
+        body.find('select[name="categories1"]')
+          .find('option[value="' + response.categories[1] + '"]')
+          .prop('selected', true);
+      }
+
+      if (typeof response.categories[2] !== 'undefined') {
+        body.find('select[name="categories2"]')
+          .find('option[value="' + response.categories[2] + '"]')
+          .prop('selected', true);
+      }
+
+      if (typeof response.tags[0] !== 'undefined') {
+        body.find('select[name="tags0"]')
+          .find('option[value="' + response.tags[0] + '"]')
+          .prop('selected', true);
+      }
+
+      if (typeof response.tags[1] !== 'undefined') {
+        body.find('select[name="tags1"]')
+          .find('option[value="' + response.tags[1] + '"]')
+          .prop('selected', true);
+      }
+
+      if (typeof response.tags[2] !== 'undefined') {
+        body.find('select[name="tags2"]')
+          .find('option[value="' + response.tags[2] + '"]')
+          .prop('selected', true);
+      }
+
+      body.find('select[name="verbs"]')
+        .find('option[value="' + response.verb + '"]')
+        .prop('selected', true);
+
+      body.find('select[name="other_people_posed"]')
+        .val(response.other_people_posed);
+      body.find('select[name="other_people_required"]')
+        .val(response.other_people_required);
+
+      body.find('#loading').hide();
+    }
+  );
+}

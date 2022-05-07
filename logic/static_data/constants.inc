@@ -59,6 +59,9 @@ const race_bunny      = ['bunny', 'veena', 'viera', 'rava', 'bun',];
 const nested_structure = 'folders';
 const flat_structure   = 'files';
 
+const copy_first = 'first';
+const copy_last  = 'last';
+
 const this_file  = true;
 const other_file = false;
 

@@ -1,5 +1,7 @@
 <?php
 
+use JetBrains\PhpStorm\ArrayShape;
+
 class pose_folder_parser extends settings {
 
   /**
@@ -196,56 +198,10 @@ class pose_folder_parser extends settings {
       }
       //endregion Checking nearby for a preview image
 
-      //region Determine race
-      $pose_race = null;
-      //Step through each race's list of aliases
-      foreach (races as $race) { // List of race constants
-        foreach (constant("race_$race") as $race_race) // List of race aliases
-        {
-          if (str_contains($pose_name, $race_race)) {
-            $pose_race = constant("race_$race")[0];
-            // Add an indicator of where the race was
-            $pose_name = str_replace($race_race, '*$@', $pose_name);
-            break;
-          }
-        }
-        if ($pose_race != null) {
-          break;
-        }
-      }
-      //endregion Determine race
-
-      //region Check for gender
-      $gender = null;
-      // Check for commonly occurring m or f next to the race
-      if ($pose_race != null) {
-        if (str_contains($pose_name, ' m ')) {
-          $pose_name = str_replace(' m ', 'male', $pose_name);
-        }
-        else if (str_contains($pose_name, '*$@m')) {
-          $pose_name = str_replace('*$@m', 'male', $pose_name);
-        }
-        else if (str_contains($pose_name, ' f ')) {
-          $pose_name = str_replace(' f ', 'female', $pose_name);
-        }
-        else if (str_contains($pose_name, '*$@f')) {
-          $pose_name = str_replace('*$@f', 'female', $pose_name);
-        }
-      }
-      // Check for also-common female or male specification
-      if (str_contains($pose_name, 'male')) {
-        $gender = gender_male;
-        if (str_contains($pose_name, 'female')) {
-          $gender = gender_female;
-        }
-
-        // Trim the gender from the file name
-        $pose_name = str_replace('female', '', $pose_name);
-        $pose_name = str_replace('male', '', $pose_name);
-      }
-      // Strip race indicator
-      $pose_name = str_replace('*$@', '', $pose_name);
-      //endregion Check for gender
+      $extract   = $this->extract_race_and_gender($pose_name);
+      $gender    = $extract['gender'];
+      $pose_race = $extract['race'];
+      $pose_name = $extract['name'];
 
       //region Check for author
       $author = null;
@@ -401,6 +357,76 @@ class pose_folder_parser extends settings {
   }
 
   /**
+   * @param string $pose_name
+   *
+   * @return string[] list of pose name, race, and gender
+   */
+  #[ArrayShape([
+    'name'   => "string",
+    'race'   => "mixed|null",
+    'gender' => "bool|null",
+  ])]
+  protected function extract_race_and_gender(string $pose_name): array {
+    $pose_name = strtolower($pose_name);
+
+    //region Determine race
+    $pose_race = null;
+    //Step through each race's list of aliases
+    foreach (races as $race) { // List of race constants
+      foreach (constant("race_$race") as $race_race) // List of race aliases
+      {
+        if (str_contains($pose_name, $race_race)) {
+          $pose_race = constant("race_$race")[0];
+          // Add an indicator of where the race was
+          $pose_name = str_replace($race_race, '*$@', $pose_name);
+          break;
+        }
+      }
+      if ($pose_race != null) {
+        break;
+      }
+    }
+    //endregion Determine race
+
+    //region Check for gender
+    $gender = null;
+    // Check for commonly occurring m or f next to the race
+    if ($pose_race != null) {
+      if (str_contains($pose_name, ' m ')) {
+        $pose_name = str_replace(' m ', 'male', $pose_name);
+      }
+      else if (str_contains($pose_name, '*$@m')) {
+        $pose_name = str_replace('*$@m', 'male', $pose_name);
+      }
+      else if (str_contains($pose_name, ' f ')) {
+        $pose_name = str_replace(' f ', 'female', $pose_name);
+      }
+      else if (str_contains($pose_name, '*$@f')) {
+        $pose_name = str_replace('*$@f', 'female', $pose_name);
+      }
+    }
+    // Check for also-common female or male specification
+    if (str_contains($pose_name, 'male')) {
+      $gender = gender_male;
+      if (str_contains($pose_name, 'female')) {
+        $gender = gender_female;
+      }
+
+      // Trim the gender from the file name
+      $pose_name = str_replace(['female', 'male'], '', $pose_name);
+    }
+    // Strip race indicator
+    $pose_name = str_replace('*$@', '', $pose_name);
+    //endregion Check for gender
+
+    return [
+      'name'   => $pose_name,
+      'race'   => $pose_race,
+      'gender' => $gender,
+    ];
+  }
+
+  /**
    * This method generates a checksum of the poses
    *
    * @param bool                   $manual_check whether it should check the
@@ -464,42 +490,7 @@ class pose_folder_parser extends settings {
           continue;
         }
 
-        $pose_race = null;
-        foreach (races as $race) {
-          foreach (constant("race_$race") as $race_race) {
-            if (str_contains($pose_name, $race_race)) {
-              $pose_name = str_replace($race_race, '*$@', $pose_name);
-              $pose_race = true;
-              break;
-            }
-          }
-          if ($pose_race != null) {
-            break;
-          }
-        }
-        if ($pose_race != null) {
-          if (str_contains($pose_name, ' m ')) {
-            $pose_name = str_replace(' m ', 'male', $pose_name);
-          }
-          else if (str_contains($pose_name, '*$@m')) {
-            $pose_name = str_replace('*$@m', 'male', $pose_name);
-          }
-          else if (str_contains($pose_name, ' f ')) {
-            $pose_name = str_replace(' f ', 'female', $pose_name);
-          }
-          else if (str_contains($pose_name, '*$@f')) {
-            $pose_name = str_replace('*$@f', 'female', $pose_name);
-          }
-        }
-        if (str_contains($pose_name, 'male')) {
-          if (str_contains($pose_name, 'female')) {
-            $pose_name = str_replace('female', '', $pose_name);
-          }
-          else {
-            $pose_name = str_replace('male', '', $pose_name);
-          }
-        }
-        $pose_name = str_replace('*$@', '', $pose_name);
+        $pose_name = $this->extract_race_and_gender($pose_name)['name'];
 
         if (str_contains($pose_name, '[')) {
           $author    = explode('[', $pose_name);
