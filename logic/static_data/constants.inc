@@ -31,24 +31,30 @@ const genders = [
 const gender_male   = true;
 const gender_female = false;
 
-const races       = [
-  'miqo',
-  'hyur',
-  'elezen',
-  'roe',
-  'lala',
+const races           = [
+  'miqote',
+  'highlander',
+  'diskwight',
+  'roegadyn',
+  'plainsfolk',
   'aura',
-  'hroth',
-  'bun',
+  'hrothgar',
+  'bunny',
 ];
-const race_miqo   = ['miqo', "miqo'te", 'miqote'];
-const race_hyur   = ['hyur', 'midlander', 'highlander'];
-const race_elezen = ['elezen', 'wildwood', 'diskwight'];
-const race_roe    = ['roe', 'roegadyn'];
-const race_lala   = ['lala', 'lalafell', 'potato', 'plainsfolk', 'dunesfolk'];
-const race_aura   = ['aura', 'au ra', 'dragon', 'raen', 'xaela'];
-const race_hroth  = ['hroth', 'hrothgar', 'lion'];
-const race_bun    = ['bun', 'viera', 'bunny', 'rava', 'veena'];
+const race_miqote     = ['miqote', "miqo'te", 'miqo',];
+const race_highlander = ['highlander', 'midlander', 'hyur',];
+const race_diskwight  = ['diskwight', 'wildwood', 'elezen',];
+const race_roegadyn   = ['roegadyn', 'roe',];
+const race_plainsfolk = [
+  'plainsfolk',
+  'dunesfolk',
+  'lalafell',
+  'potato',
+  'lala',
+];
+const race_aura       = ['aura', 'au ra', 'raen', 'xaela'];
+const race_hrothgar   = ['hrothgar', 'hroth',];
+const race_bunny      = ['bunny', 'veena', 'viera', 'rava', 'bun',];
 
 const nested_structure = 'folders';
 const flat_structure   = 'files';
