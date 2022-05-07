@@ -32,14 +32,14 @@ const gender_male   = true;
 const gender_female = false;
 
 const races           = [
+  'aura',
   'miqote',
+  'bunny',
+  'lalafell',
   'hyur',
   'elezen',
   'roegadyn',
-  'lalafell',
-  'aura',
   'hrothgar',
-  'bunny',
 ];
 const race_miqote     = ['miqote', "miqo'te", 'miqo',];
 const race_hyur       = ['hyur', 'highlander', 'midlander',];
