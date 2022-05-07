@@ -439,4 +439,8 @@ echo $script . '}</script>';
       });
     });
   }
+
+  update_search_link('xivma_search', 'input[name="name"]');
+  update_search_link('xivma_author_search', 'input[name="author"]');
+  update_search_link('xivma_pack_search', 'select[name="pack_names"]');
 </script>
