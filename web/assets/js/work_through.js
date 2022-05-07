@@ -205,7 +205,7 @@ body.on('input', '#other_people_posed', function () {
 })
 
 // Enforce category selections when a pose pack is selected
-function pack_name_extra_load(element) {
+function pack_name_extra_load(element, keycode) {
   body.find('#loading').show();
   $.ajax(
     {
@@ -252,7 +252,12 @@ function pack_name_extra_load(element) {
             $(this).prop('selected', false);
         });
       });
-      element.parent().find('input').focus();
+
+      if (e.keyCode == 9) {
+        element.parent().find('input').focus();
+      } else {
+        element.parent().parent().find('input[name="pack"]').focus();
+      }
     })
 }
 
@@ -264,7 +269,7 @@ body.on('keydown', '#pack_names', function (e) {
     (e.keyCode == 9 || e.keyCode == 16) &&
     $(this).find('option:selected').length > 0
   ) {
-    pack_name_extra_load($(this));
+    pack_name_extra_load($(this), e.keyCode);
   }
 });
 
