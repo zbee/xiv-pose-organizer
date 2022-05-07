@@ -190,7 +190,6 @@ body.on('click', '#configure a.populate_defaults', function () {
     tag('erotic') +
     tag('cute') +
     tag('adventure') +
-    tag('dance') +
     tag('romantic') +
     tag('sad') +
     tag('idle') +
