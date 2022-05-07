@@ -443,9 +443,11 @@ function copy_pose(copy_type) {
 
       // Unselect any selections
       body.find('select').each(function () {
-        $(this).find('option').each(function () {
-          $(this).prop('selected', false);
-        });
+        if ($(this).attr('id') !== 'gender' && $(this).attr('id') !== 'race') {
+          $(this).find('option').each(function () {
+            $(this).prop('selected', false);
+          });
+        }
       });
 
       // Handle pack selection
@@ -458,10 +460,17 @@ function copy_pose(copy_type) {
       body.find('input[name="name"]')
         .val(response.name).removeClass('error');
 
-      response.submission_to_other = response.submission_to_other === null
-        ? '' : response.submission_to_other;
-      response.submission_to_other = response.submission_to_other === true
-        ? '1' : '0';
+      switch (response.submission_to_other) {
+        case null:
+          response.submission_to_other = '';
+          break;
+        case true:
+          response.submission_to_other = '1';
+          break;
+        case false:
+          response.submission_to_other = '0';
+          break;
+      }
       body.find('select[name="submission_to_other"]')
         .find('option[value="' + response.submission_to_other + '"]')
         .prop('selected', true).parent().removeClass('error');
