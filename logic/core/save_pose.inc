@@ -175,11 +175,12 @@ class save_pose extends navigator {
       $sub .= 'g(' . $pose->other_people_posed + 1 . ') ';
     }
     // Sub/Dom people required
+    $pose->submission_to_other === true ? $sub .= 'sub' : $sub .= '';
+    $pose->submission_to_other === false ? $sub .= 'dom' : $sub .= '';
     if ($pose->other_people_required > 0) {
-      $pose->submission_to_other === true
-        ? $sub .= 'sub'
-        : ($pose->submission_to_other === false ? $sub .= 'dom'
-        : $sub .= 'needs');
+      if ($pose->submission_to_other === null) {
+        $sub .= 'needs';
+      }
       $sub .= '(' . $pose->other_people_required . ')';
     }
 
