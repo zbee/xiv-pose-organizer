@@ -373,6 +373,10 @@ function update_search_link(link, input) {
   );
 }
 
+update_search_link('xivma_search', 'input[name="name"]');
+update_search_link('xivma_author_search', 'input[name="author"]');
+update_search_link('xivma_pack_search', 'select[name="pack_names"]');
+
 // Keybinding the path span copy to clipboard
 body.on('keydown', 'span:focus', function (e) {
   if (e.keyCode == 13 || e.keyCode == 32) {
