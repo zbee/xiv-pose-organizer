@@ -33,23 +33,23 @@ const gender_female = false;
 
 const races           = [
   'miqote',
-  'highlander',
-  'diskwight',
+  'hyur',
+  'elezen',
   'roegadyn',
-  'plainsfolk',
+  'lalafell',
   'aura',
   'hrothgar',
   'bunny',
 ];
 const race_miqote     = ['miqote', "miqo'te", 'miqo',];
-const race_highlander = ['highlander', 'midlander', 'hyur',];
-const race_diskwight  = ['diskwight', 'wildwood', 'elezen',];
+const race_hyur       = ['hyur', 'highlander', 'midlander',];
+const race_elezen     = ['elezen', 'diskwight', 'wildwood',];
 const race_roegadyn   = ['roegadyn', 'roe',];
-const race_plainsfolk = [
-  'plainsfolk',
-  'dunesfolk',
+const race_lalafell   = [
   'lalafell',
   'potato',
+  'plainsfolk',
+  'dunesfolk',
   'lala',
 ];
 const race_aura       = ['aura', 'au ra', 'raen', 'xaela'];
