@@ -494,9 +494,12 @@ function copy_pose(copy_type) {
         .find('option[value="' + response.verb + '"]')
         .prop('selected', true);
 
-      body.find('select[name="other_people_posed"]')
+      body.find('input[name="name"]')
+        .val(response.name);
+
+      body.find('input[name="other_people_posed"]')
         .val(response.other_people_posed);
-      body.find('select[name="other_people_required"]')
+      body.find('input[name="other_people_required"]')
         .val(response.other_people_required);
 
       body.find('#loading').hide();
