@@ -17,16 +17,18 @@ unset($path[count($path) - 1]);
 $path = implode("<wbr>\\", $path);
 
 // Format the pose image data
-$image = '';
-if ($pose->has_preview && is_file($poser->poses_folder . $pose->image_name)) {
+$image          = '';
+$original_image = $poser->poses_folder . $pose->image_name;
+$tmp_image      = '..\\web\\' . $pose->image_name;
+if ($pose->has_preview && (is_file($original_image) || is_file($tmp_image))) {
   $extension = explode('.', $pose->image_name);
   $extension = $extension[count($extension) - 1];
   $image     = "assets\\tmp\\$poser->work_through_pose_step.$extension";
-  if (!str_contains($pose->image_name, 'tmp')) {
-    copy($poser->poses_folder . $pose->image_name, $image);
+  if (!str_contains($pose->image_name, 'assets\\tmp')) {
+    copy($original_image, $image);
   }
   else {
-    copy('..\\web\\' . $pose->image_name, $image);
+    copy($tmp_image, $image);
   }
 }
 else {
