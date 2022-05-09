@@ -52,20 +52,25 @@ class pose_folder_parser extends settings {
       $this->poses          = $pose_data->poses;
       usort($this->poses, static fn($a, $b) => strcmp($a->path, $b->path));
 
-      if (!$prevent_checksum)
-        $check_checksum = $this->poses_checksum(true);
+      if (!$prevent_checksum) {
+        $check_checksum = $this->poses_checksum(manual_check: true);
+      }
     }
 
     // Reparse the poses folder if it has not yet been, if reparse is specified,
     //    or if the checksum has changed
     if (
-      !file_exists($this->dots . 'data/poses.json') ||
       $reparse ||
-      (!$prevent_checksum && $check_checksum != $this->poses_checksum)
+      !file_exists($this->dots . 'data/poses.json') ||
+      (!$prevent_checksum && $check_checksum !== $this->poses_checksum)
     ) {
-      $this->poses = [];
-      $this->parse_contents();
-      $this->poses_checksum = $this->poses_checksum();
+      $temporary_poses = false;
+      if (isset($this->poses) && count($this->poses) > 0) {
+        $temporary_poses = $this->poses;
+      }
+      $this->poses          = [];
+      $this->poses_checksum =
+        $this->poses_checksum(overwrite_poses: $temporary_poses);
       $this->save_poses();
     }
   }
@@ -92,11 +97,17 @@ class pose_folder_parser extends settings {
   }
 
   /**
-   * @param DirectoryIterator|bool $folder
+   * @param DirectoryIterator|bool $folder          folder to parse, used for
+   *                                                recursion
+   * @param pose[]|bool            $overwrite_poses list of poses to save the
+   *                                                data from
    *
    * @return int the number of poses found in the folder
    */
-  private function parse_contents(DirectoryIterator|bool $folder = false): int {
+  private function parse_contents(
+    DirectoryIterator|bool $folder = false,
+    array|bool             $overwrite_poses = false
+  ): int {
 
     // If we're not recurring into a folder, the target is the configured
     //    pose folder
@@ -134,8 +145,9 @@ class pose_folder_parser extends settings {
 
         $poses += $this->parse_contents(
           new DirectoryIterator(
-            $found->getPath() . '\\' . $found->getFilename()
-          )
+            $found->getPath() . '\\' . $found->getFilename(),
+          ),
+          $overwrite_poses
         );
         continue;
       }
@@ -166,6 +178,34 @@ class pose_folder_parser extends settings {
         continue;
       }
 
+      //region Check if pose exists
+      //Hashing the parse file to generate a key to track it into the reworked
+      //    pose folder
+      $pose_data = file_get_contents($found->getRealPath());
+      $key       = md5($pose_data);
+
+      // If temporary previous pose data exists for overwriting
+      if ($overwrite_poses !== false) {
+        $overwrite_found = false;
+        // Loop through the overwrite poses
+        foreach ($overwrite_poses as $overwrite_key => $overwrite_pose) {
+          // Compare keys
+          if ($overwrite_pose->key === $key) {
+            // Save the pose
+            ++$poses;
+            $this->poses[]   = $overwrite_pose;
+            $overwrite_found = true;
+            // Un-save this overwrite pose
+            unset($overwrite_poses[$overwrite_key]);
+          }
+        }
+        // Skip this pose if a match was found
+        if ($overwrite_found) {
+          continue;
+        }
+      }
+
+      //endregion Check if pose exists
       //region Parsing a pose
 
       //region Checking nearby for a preview image
@@ -225,11 +265,6 @@ class pose_folder_parser extends settings {
       $pose_name = preg_replace('/\s+/', ' ', trim($pose_name));
       //endregion Parsing a pose
 
-      //Hashing the parse file to generate a key to track it into the reworked
-      //    pose folder
-      $pose_data = file_get_contents($found->getRealPath());
-      $key       = md5($pose_data);
-
       try {
         ++$poses;
         $this->poses[] = new pose(
@@ -265,9 +300,6 @@ class pose_folder_parser extends settings {
     string $pose_name,
     string $path
   ): void {
-    $pose_name = strtolower($pose_name);
-    $path      = strtolower($path);
-
     // Remove the file extension from the path, and save it
     $root_path = explode('.', $path);
     $extension = $path[count($root_path) - 1];
@@ -277,6 +309,11 @@ class pose_folder_parser extends settings {
     $root_path = explode('\\', $root_path);
     unset($root_path[count($root_path) - 1]);
     $root_path = implode('\\', $root_path);
+    // Lower case the path
+    $root_path_case = $root_path;
+    $root_path      = strtolower($root_path);
+    $pose_name_case = $pose_name;
+    $pose_name      = strtolower($pose_name);
 
     // Determine the format of the extension
     $file_format = 'ana';
@@ -302,7 +339,8 @@ class pose_folder_parser extends settings {
     // Determine the two file paths we will be looking for
     if ($which_duplicate === other_file) {
       $good_path      = $path;
-      $duplicate_path = $root_path . '\\' . $pose_name . '.' . $other_extension;
+      $duplicate_path =
+        $root_path_case . '\\' . $pose_name_case . '.' . $other_extension;
     }
     else {
       $good_path      = $root_path . '\\' . $pose_name . '.' . $other_extension;
@@ -312,11 +350,11 @@ class pose_folder_parser extends settings {
     // Find the two pose structs in the list
     foreach ($this->poses as $key => $pose) {
       // Save the duplicate path if this pose is the one we want to keep
-      if (strtolower($pose->path) === $good_path) {
+      if (strtolower($pose->path) === strtolower($good_path)) {
         $this->poses[$key]->duplicate_pose = $duplicate_path;
       }
       // Unlink the duplicate pose
-      if (strtolower($pose->path) === $duplicate_path) {
+      if (strtolower($pose->path) === strtolower($duplicate_path)) {
         unset($this->poses[$key]);
       }
     }
@@ -331,7 +369,7 @@ class pose_folder_parser extends settings {
       // Not standard method of getting a name but will allow for more collision
       //    without prompting it (only difference between poses in a
       //    pack may only be differentiated by race, etc)
-      $pose_name = explode('\\', $pose->path);
+      $pose_name = explode('\\', strtolower($pose->path));
       $pose_name = explode('.', $pose_name[count($pose_name) - 1]);
       unset($pose_name[count($pose_name) - 1]);
       $pose_name = implode('.', $pose_name);
@@ -432,15 +470,20 @@ class pose_folder_parser extends settings {
   /**
    * This method generates a checksum of the poses
    *
-   * @param bool                   $manual_check whether it should check the
-   *                                             files or the parsed poses
-   * @param DirectoryIterator|bool $folder       only to be used with a true
-   *                                             $manual_check, is the target
-   *                                             for recursion
+   * @param bool                   $manual_check    whether it should check the
+   *                                                files or the parsed poses
+   * @param DirectoryIterator|bool $folder          only to be used with a true
+   *                                                $manual_check, is the
+   *                                                target
+   *                                                for recursion
+   * @param pose[]|bool            $overwrite_poses worked-through poses for
+   *                                                overwriting name value
+   *                                                purposes
    */
   private function poses_checksum(
     bool                   $manual_check = false,
-    DirectoryIterator|bool $folder = false
+    DirectoryIterator|bool $folder = false,
+    array|bool             $overwrite_poses = false
   ): string {
     $first_level = false;
     $check       = '';
@@ -470,7 +513,8 @@ class pose_folder_parser extends settings {
             true,
             new DirectoryIterator(
               $found->getPath() . '\\' . $found->getFilename()
-            )
+            ),
+            $overwrite_poses
           );
           continue;
         }
@@ -491,6 +535,26 @@ class pose_folder_parser extends settings {
 
         if (!$is_pose) {
           continue;
+        }
+
+        // If temporary previous pose data exists for overwriting
+        if ($overwrite_poses !== false) {
+          $pose_data       = file_get_contents($found->getRealPath());
+          $key             = md5($pose_data);
+          $overwrite_found = false;
+          // Loop through the overwrite poses
+          foreach ($overwrite_poses as $overwrite_pose) {
+            // Compare keys
+            if ($overwrite_pose->key === $key) {
+              $overwrite_found = true;
+              $pose_name       = $overwrite_pose->name;
+            }
+          }
+          // Skip this pose if a match was found
+          if ($overwrite_found) {
+            $check .= substr($pose_name, 0, 3);
+            continue;
+          }
         }
 
         $pose_name = $this->extract_race_and_gender($pose_name)['name'];
