@@ -48,6 +48,14 @@ class save_pose extends navigator {
         $duplicate_extension[count($duplicate_extension) - 1];
     }
 
+    // Handle skipped data
+    if ($pose->author === 'n/a') {
+      $pose->author = null;
+    }
+    if ($pose->link === 'n/a') {
+      $pose->link = null;
+    }
+
     //region Folder name
     // Choose fill data for folder names
     // Pose name
@@ -73,8 +81,11 @@ class save_pose extends navigator {
     }
 
     // Author
-    $author = $this->author_format;
-    $author = str_replace('%author%', $pose->author, $author);
+    $author = '';
+    if ($pose->author !== null) {
+      $author = $this->author_format;
+      $author = str_replace('%author%', $pose->author, $author);
+    }
 
     // Others posed
     $group = '';
@@ -104,7 +115,7 @@ class save_pose extends navigator {
     // Fill in each category
     foreach ($pose->categories as $index => $category) {
       if (
-        !$this->file_and_folder_separate_tagging or
+        !$this->file_and_folder_separate_tagging ||
         !$this->use_nested_structure_for_poses
       ) {
         $categories[$index] = $category . ' ';
@@ -145,10 +156,13 @@ class save_pose extends navigator {
     // Author
     $author = $this->author_format;
     if (
-      !$this->always_attribute_to_author and
+      !$this->always_attribute_to_author &&
       $this->use_nested_structure_for_poses
     ) {
       $author = str_replace('%author%', '', $author);
+    }
+    else if ($pose->author === null) {
+      $author = '';
     }
     else {
       $author = str_replace('%author%', $pose->author, $author);
@@ -296,6 +310,10 @@ class save_pose extends navigator {
    * @throws Exception
    */
   public function save(array $post_data) {
+    if (!isset($post_data['_categories'])) {
+      return;
+    }
+
     //region Tracked data
     if (!isset($post_data['pack_names'])) {
       $post_data['pack_names'] = [];
