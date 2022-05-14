@@ -110,35 +110,101 @@ class navigator extends maintain_tagging {
       throw new RuntimeException('copy_pose_fields: invalid copy_type');
     }
 
+    $current_pose_index = $this->current_pose(key: true);
+
+    //region Copy first of name
     if ($copy_type === copy_first) {
+      $pose = $this->current_pose();
+
+      //region Same name and path
       // First look for a pose with the same file name, minus race and gender
-      $pose      = $this->current_pose();
       $pose_path = explode('\\', $pose->path);
       $pose_path = $pose_path[count($pose_path) - 1];
       $pose_path = $this->extract_race_and_gender($pose_path)['name'];
 
-      foreach ($this->poses as $match) {
+      foreach ($this->poses as $index => $match) {
+        if ($index >= $current_pose_index) {
+          continue;
+        }
         $match_path = explode('\\', $match->path);
         $match_path = $match_path[count($match_path) - 1];
         $match_path = $this->extract_race_and_gender($match_path)['name'];
-        if ($match_path === $pose_path) {
+        if (
+          $match->key !== $pose->key && $match_path === $pose_path
+        ) {
           return $match;
         }
       }
+      //endregion Same name and path
 
-      // If a same-name pose wasn't found grab the first one from the same folder
-      foreach ($this->poses as $match) {
-        $match_path = explode('\\', $match->path);
-        unset($match_path[count($match_path) - 1]);
-        $match_path = implode('\\', $match_path);
-        if (str_starts_with($pose->path, $match_path)) {
+      //region Same path
+      // If a same-name pose wasn't found grab the first one from the same
+      //   folder
+      $pose_path = explode('\\', $pose->path);
+      unset($pose_path[count($pose_path) - 1]);
+      $pose_path = implode('\\', $pose_path);
+      foreach ($this->poses as $index => $match) {
+        if (
+          $index < $current_pose_index &&
+          $match->key !== $pose->key &&
+          str_starts_with($match->path, $pose_path)
+        ) {
           return $match;
         }
       }
+      //endregion Same path
+
+      //region Same name and one folder up
+      // If a same-folder search didn't yield a pose previous to the current
+      //   one, try to search by name again one folder up
+      $pose_path = explode('\\', $pose->path);
+      unset(
+        $pose_path[count($pose_path) - 1], $pose_path[count($pose_path) - 1]
+      );
+      $pose_path = implode('\\', $pose_path);
+      $pose_name = explode('\\', $pose->path);
+      $pose_name = $pose_name[count($pose_name) - 1];
+      $pose_name = $this->extract_race_and_gender($pose_name)['name'];
+      foreach ($this->poses as $index => $match) {
+        if ($index >= $current_pose_index) {
+          continue;
+        }
+        $match_name = explode('\\', $match->path);
+        $match_name = $match_name[count($match_name) - 1];
+        $match_name = $this->extract_race_and_gender($match_name)['name'];
+        if (
+          $match->key !== $pose->key &&
+          $match_name === $pose_name &&
+          str_starts_with($match->path, $pose_path)
+        ) {
+          return $match;
+        }
+      }
+      //endregion Same name and one folder up
+
+      //region One folder up
+      // If a same-folder search didn't yield a pose previous to the current
+      //   one, try to search one folder up
+      $pose_path = explode('\\', $pose->path);
+      unset(
+        $pose_path[count($pose_path) - 1], $pose_path[count($pose_path) - 1]
+      );
+      $pose_path = implode('\\', $pose_path);
+      foreach ($this->poses as $index => $match) {
+        if (
+          $index < $current_pose_index &&
+          $match->key !== $pose->key &&
+          str_starts_with($match->path, $pose_path)
+        ) {
+          return $match;
+        }
+      }
+      //endregion One folder up
 
       return new pose('empty');
     }
+    //endregion Copy first of name
 
-    return $this->poses[$this->current_pose(key: true) - 1];
+    return $this->poses[$current_pose_index - 1];
   }
 }
