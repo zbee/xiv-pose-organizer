@@ -32,17 +32,19 @@ function navigate(nav) {  // Process navigation data
   data[navigate_data.current] = ''
   data[navigate_data.target] = '';
   data['resume'] = navigate_data.resume;
-  if (typeof navigate_data.skip != 'undefined')
+  if (typeof navigate_data.skip != 'undefined') {
     data['skip'] = '';
+    data['key'] = navigate_data.key;
+  }
   let request_type = 'POST';
   if (navigate_data.target != 'work_through')
     request_type = 'GET';
 
   // Don't allow navigation if the fields are empty, with triple click bypass
-  if (missing_required_fields() === true && navigate_attempts < 3 && typeof navigate_data.reset === 'undefined') {
+  if (missing_required_fields() === true && navigate_attempts < 3 && typeof navigate_data.reset === 'undefined' && typeof navigate_data.skip === 'undefined') {
     navigate_attempts++;
     return;
-  } else if (typeof navigate_data.reset !== 'undefined' || (missing_required_fields() === true && navigate_attempts >= 3)) {
+  } else if (typeof navigate_data.reset !== 'undefined' || typeof navigate_data.skip !== 'undefined' || (missing_required_fields() === true && navigate_attempts >= 3)) {
     navigate_attempts = 1;
     body.find('#loading').show();
     $.ajax(

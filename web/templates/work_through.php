@@ -378,6 +378,7 @@ echo $script . '}</script>';
         <div class="navigate" style="position:static;font-size:80px"
              data-current="work_through" data-target="work_through"
              data-resume="<?= $poser->work_through_pose_step + 1 ?>"
+             data-key="<?= $pose->key ?>"
              data-skip="" tabindex="400" onclick="navigate($(this))">
           &#11122;
         </div>
