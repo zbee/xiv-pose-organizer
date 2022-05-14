@@ -210,7 +210,7 @@ body.on('input', '#other_people_posed', function () {
 })
 
 // Enforce category selections when a pose pack is selected
-function pack_name_extra_load(element, keycode) {
+function pack_name_extra_load(element, keycode, image = false) {
   body.find('#loading').show();
   $.ajax(
     {
@@ -429,6 +429,8 @@ function copy_pose(copy_type) {
     function (response) {
       if (response.length === 0) {
         alert('No similar pose found');
+        body.find('#loading').hide();
+        return;
       }
       response = JSON.parse(response);
 
@@ -450,11 +452,23 @@ function copy_pose(copy_type) {
         }
       });
 
+      // Handle author and link
+      body.find('input[name="author"]').val(response.author);
+      body.find('input[name="link"]').val(response.link);
+
+      // Handle image
+      if (response.has_preview) {
+        body.find('div[id="image"]').html(
+          "<img src='" + response.image_name + "?" + Math.random().toString() + "' alt='Pose preview image' />" +
+          "<input name='" + response.has_preview + "' value='1' type='hidden'>" +
+          "<input name='image_name' value='" + response.image_name + "' type='hidden'>"
+        );
+      }
+
       // Handle pack selection
       var pack_names = body.find('select[name="pack_names"]');
       pack_names.find('option[value="' + response.pack_name + '"]')
         .prop('selected', true).parent().removeClass('error');
-      pack_name_extra_load(pack_names);
 
       // Fill in the rest of the fields
       body.find('input[name="name"]')
@@ -520,6 +534,7 @@ function copy_pose(copy_type) {
         .find('option[value="' + response.verb + '"]')
         .prop('selected', true).parent().removeClass('error');
 
+      body.find('select[name="gender"]').focus();
       body.find('#loading').hide();
     }
   );
