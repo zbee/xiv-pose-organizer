@@ -37,7 +37,7 @@ if (isset($_POST['work_through'], $_POST['resume'])) {
     } catch (Exception $e) {
       exit(
           '<div id="loading">Failed to Parse (#resume)</div>' .
-        '<script>body.find("#loading").show();</script>'
+          '<script>body.find("#loading").show();console.debug("' . $e->getMessage() . '")</script>'
       );
     }
   }
@@ -55,7 +55,7 @@ else if (isset($_GET['work_through'])) {
   } catch (Exception $e) {
     exit(
         '<div id="loading">Failed to Parse (#setup)</div>' .
-      '<script>body.find("#loading").show();</script>'
+        '<script>body.find("#loading").show();console.debug("' . $e->getMessage() . '")</script>'
     );
   }
 
