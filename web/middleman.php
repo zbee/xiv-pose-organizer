@@ -36,7 +36,7 @@ if (isset($_POST['work_through'], $_POST['resume'])) {
       $poser->save($_POST);
     } catch (Exception $e) {
       exit(
-        '<div id="loading">Failed to Parse</div>' .
+          '<div id="loading">Failed to Parse (#resume)</div>' .
         '<script>body.find("#loading").show();</script>'
       );
     }
@@ -47,14 +47,14 @@ if (isset($_POST['work_through'], $_POST['resume'])) {
 }
 
 else if (isset($_GET['work_through'])) {
-  //Setup the file to hold the step in the work_through process
+    //Set up the file to hold the step in the work_through process
   file_put_contents('../data/resume.json', $_GET['resume'] ?? 0);
   try {
     $poser->parse_folder();
     require 'templates/work_through.php';
   } catch (Exception $e) {
     exit(
-      '<div id="loading">Failed to Parse</div>' .
+        '<div id="loading">Failed to Parse (#setup)</div>' .
       '<script>body.find("#loading").show();</script>'
     );
   }
