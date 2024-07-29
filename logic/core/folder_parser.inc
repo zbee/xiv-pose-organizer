@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpPossiblePolymorphicInvocationInspection */
 
 use JetBrains\PhpStorm\ArrayShape;
 
@@ -24,7 +24,7 @@ class pose_folder_parser extends settings {
    *                      overwritten
    *                      Just check settings and start parsing the poses
    *
-   * @throws Exception
+   * @throws RuntimeException|JsonException
    */
   public function parse_folder(
     bool $reparse = false,
@@ -33,7 +33,7 @@ class pose_folder_parser extends settings {
     parent::__construct();
 
     if (!is_dir($this->poses_folder)) {
-      throw new Exception('Configured poses folder could not be found.');
+        throw new RuntimeException('Configured poses folder could not be found.');
     }
 
     $this->folders = new DirectoryIterator($this->poses_folder);
@@ -41,8 +41,12 @@ class pose_folder_parser extends settings {
     // If available load the saved poses data
     $check_checksum = false;
     if (file_exists($this->dots . 'data/poses.json')) {
-      $pose_data =
-        json_decode(file_get_contents($this->dots . 'data/poses.json'));
+        $pose_data = json_decode(
+            file_get_contents($this->dots . 'data/poses.json'),
+            false,
+            512,
+            JSON_THROW_ON_ERROR
+        );
 
       foreach ($pose_data->poses as $key => $pose) {
         $pose_data->poses[$key] = new pose($pose);
@@ -59,6 +63,7 @@ class pose_folder_parser extends settings {
 
     // Reparse the poses folder if it has not yet been, if reparse is specified,
     //    or if the checksum has changed
+      /** @noinspection NotOptimalIfConditionsInspection */
     if (
       $reparse ||
       !file_exists($this->dots . 'data/poses.json') ||
@@ -82,7 +87,8 @@ class pose_folder_parser extends settings {
    *
    * @return string normalized pose name
    */
-  private function normalize_pose_name($name): string {
+    private function normalize_pose_name(string $name): string
+    {
     // Swap underscores and hyphens that are in place of spaces with
     //  actual spaces
     if (substr_count($name, '_') > 0 && substr_count($name, ' ') === 0) {
@@ -139,7 +145,7 @@ class pose_folder_parser extends settings {
       // Recurse into folders
       if ($found->isDir()) {
         // Don't search the working directory
-        if ($folder->getFilename() == '..working') {
+          if ($folder->getFilename() === '..working') {
           continue;
         }
 
@@ -161,11 +167,11 @@ class pose_folder_parser extends settings {
       unset($file[count($file) - 1]);
       $file_name   = implode('.', $file);
       $file_format = null;
-      if ($extension == 'pose') {
+        if ($extension === 'pose') {
         $file_format = 'ana';
         $is_pose     = true;
       }
-      if ($extension == 'cmp') {
+        if ($extension === 'cmp') {
         $file_format = 'cmt';
         $is_pose     = true;
       }
@@ -217,8 +223,8 @@ class pose_folder_parser extends settings {
           continue;
         }
         if (
-          str_contains($possible_preview->getFilename(), '.') and
-          !$possible_preview->isDir()
+            !$possible_preview->isDir() &&
+            str_contains($possible_preview->getFilename(), '.')
         ) {
           //region Determine file extension and name
           $extension = explode('.', $possible_preview->getFilename());
@@ -229,7 +235,7 @@ class pose_folder_parser extends settings {
           $low_file_name = strtolower($file_name);
           //endregion Determine file extension and name
 
-          if ($extension == 'jpg' || $extension == 'png') {
+            if ($extension === 'jpg' || $extension === 'png') {
             $image_name = $possible_preview->getRealPath();
             $image_name = str_replace($this->poses_folder, '', $image_name);
             break;
@@ -362,6 +368,7 @@ class pose_folder_parser extends settings {
 
   /**
    * Method to save all of the poses to a json file in the data folder
+   * @throws JsonException
    */
   protected function save_poses(): void {
     $pose_names = [];
@@ -392,7 +399,8 @@ class pose_folder_parser extends settings {
         [
           'checksum' => $this->poses_checksum,
           'poses'    => $this->poses,
-        ]
+        ],
+          JSON_THROW_ON_ERROR
       )
     );
   }
@@ -423,7 +431,7 @@ class pose_folder_parser extends settings {
           break;
         }
       }
-      if ($pose_race != null) {
+        if ($pose_race !== null) {
         break;
       }
     }
@@ -432,7 +440,7 @@ class pose_folder_parser extends settings {
     //region Check for gender
     $gender = null;
     // Check for commonly occurring m or f next to the race
-    if ($pose_race != null) {
+      if ($pose_race !== null) {
       if (str_contains($pose_name, ' m ')) {
         $pose_name = str_replace(' m ', 'male', $pose_name);
       }
@@ -506,7 +514,7 @@ class pose_folder_parser extends settings {
         }
         if ($found->isDir()) {
           // Don't search the working directory
-          if ($folder->getFilename() == '..working') {
+            if ($folder->getFilename() === '..working') {
             continue;
           }
           $check .= $this->poses_checksum(
@@ -524,10 +532,10 @@ class pose_folder_parser extends settings {
         $extension = strtolower($file[count($file) - 1]);
         unset($file[count($file) - 1]);
         $file_name = implode('.', $file);
-        if ($extension == file_extension_ana) {
+          if ($extension === file_extension_ana) {
           $is_pose = true;
         }
-        if ($extension == file_extension_cmt) {
+          if ($extension === file_extension_cmt) {
           $is_pose = true;
         }
         $low_file_name = strtolower($file_name);

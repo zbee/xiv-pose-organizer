@@ -1,5 +1,8 @@
 <?php /** @noinspection PhpPossiblePolymorphicInvocationInspection */
 
+/**
+ * @property int $work_through_pose_step
+ */
 class navigator extends maintain_tagging {
 
   /**
@@ -11,6 +14,7 @@ class navigator extends maintain_tagging {
    * Method to search through the list of the poses and reset the work_through
    * pose step to the first one that is incomplete
    * @return int of the new step
+   * @noinspection ForeachInvariantsInspection
    */
   public function find_first_incomplete_pose(): int {
     for ($i = 0, $iMax = count($this->poses); $i < $iMax; $i++) {
@@ -59,14 +63,23 @@ class navigator extends maintain_tagging {
 
   /**
    * @return string[] the list of packs that have been used before
+   * @throws JsonException
    */
   public function get_packs(): array {
     if (!file_exists('../data/packs.json')) {
-      file_put_contents('../data/packs.json', json_encode([]));
+        file_put_contents(
+            '../data/packs.json',
+            json_encode([], JSON_THROW_ON_ERROR)
+        );
       $this->packs = [];
     }
     else {
-      $this->packs = json_decode(file_get_contents('../data/packs.json'), true);
+        $this->packs = json_decode(
+            file_get_contents('../data/packs.json'),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
     }
     return $this->packs;
   }
@@ -92,9 +105,14 @@ class navigator extends maintain_tagging {
 
   /**
    * @param array $packs list of pack names that have been used before
+   *
+   * @throws JsonException
    */
   public function set_packs(array $packs): void {
-    file_put_contents('../data/packs.json', json_encode($packs));
+      file_put_contents(
+          '../data/packs.json',
+          json_encode($packs, JSON_THROW_ON_ERROR)
+      );
     $this->packs = $packs;
   }
 

@@ -6,7 +6,9 @@ class pose_organizer extends structure_swap {
   public string $dots                   = '../';
 
   /**
-   * @throws Exception
+   * @throws RuntimeException|JsonException
+   * @noinspection MagicMethodsValidityInspection
+   * @noinspection PhpMissingParentConstructorInspection
    */
   public function __construct(
     string $dots = '../',

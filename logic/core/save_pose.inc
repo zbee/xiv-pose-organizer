@@ -1,8 +1,12 @@
-<?php /** @noinspection PhpInconsistentReturnPointsInspection */
+<?php
+/** @noinspection CascadeStringReplacementInspection */
+
+/** @noinspection PhpInconsistentReturnPointsInspection */
 
 class save_pose extends navigator {
 
   private function find_pose(string $key): pose {
+      /** @noinspection ForeachInvariantsInspection */
     for ($i = 0, $iMax = count($this->poses); $i < $iMax; $i++) {
       if ($this->poses[$i]->key == $key) {
         return $this->poses[$i];
@@ -10,6 +14,9 @@ class save_pose extends navigator {
     }
   }
 
+    /**
+     * @throws JsonException
+     */
   private function save_tracked(array $tracked_data): void {
     $this->set_tag_data(
       $tracked_data['tags'],
@@ -21,7 +28,7 @@ class save_pose extends navigator {
 
   private function create_link(string $url, string $file): void {
     $content = "[InternetShortcut]\r\nURL=" . $url . "\r\n";
-    $fp      = fopen($file . '.url', 'w');
+      $fp = fopen($file . '.url', 'wb');
     fwrite($fp, $content);
     fclose($fp);
   }
@@ -219,8 +226,8 @@ class save_pose extends navigator {
       copy($pose->path, $destination . $file_name . $file_extension);
       // Duplicated pose
       if (
-        $this->normalize_poses and
-        $this->keep_other_pose_formats and
+          $this->normalize_poses &&
+          $this->keep_other_pose_formats &&
         $pose->duplicate_pose !== null
       ) {
         copy(
@@ -270,8 +277,8 @@ class save_pose extends navigator {
       copy($pose->path, $destination . $folder . $file_name . $file_extension);
       // Duplicated pose
       if (
-        $this->normalize_poses and
-        $this->keep_other_pose_formats and
+          $this->normalize_poses &&
+          $this->keep_other_pose_formats &&
         $pose->duplicate_pose !== null
       ) {
         copy(
@@ -309,7 +316,8 @@ class save_pose extends navigator {
   /**
    * @throws Exception
    */
-  public function save(array $post_data) {
+    public function save(array $post_data): void
+    {
     if (!isset($post_data['_categories'])) {
       return;
     }
@@ -328,10 +336,12 @@ class save_pose extends navigator {
       ]
     );
     // Discard tracked data
-    unset($post_data['_categories']);
-    unset($post_data['_tags']);
-    unset($post_data['verbs']);
-    unset($post_data['pack_names']);
+        unset(
+            $post_data['_categories'],
+            $post_data['_tags'],
+            $post_data['verbs'],
+            $post_data['pack_names']
+        );
     //endregion Tracked data
 
     // Clean up pack-dependent data
@@ -359,7 +369,8 @@ class save_pose extends navigator {
     $this->parse_folder();
   }
 
-  public function skip($key) {
+    public function skip($key): void
+    {
     $pose = $this->find_pose($key);
     $pose->skip();
     $this->save_poses();
